@@ -1,35 +1,45 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import toast from "react-hot-toast";
 // import "./Dashboard.css";
 import { Funnel } from "lucide-react";
 import DashboardIframe from "./DashboardIframe";
 import RestaurantDropdown from "../../../components/RestaurantDropdown";
-
-const RESTAURANT_OPTIONS = Array.from({ length: 20 }, (_, i) => `Restaurant ${i + 1}`);
+import { getRestaurantsByCompanyId } from "../../../services/modules/restaurantService";
 
 const Dashboard = () => {
-  const [restaurants, setRestaurants] = useState(RESTAURANT_OPTIONS);
+  const [restaurants, setRestaurants] = useState([]);
+  const [allRestaurants, setAllRestaurants] = useState();
+  const [restaurantOptions, setRestaurantOptions] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [selected, setSelected] = useState([]);
   const [active, setActive] = useState("prime");
   const [timePeriod, setTimePeriod] = useState(["", ""]);
   const [error, setError] = useState("");
   const [iframeData, setIframeData] = useState({}); // This will store iframe of dashboard
 
-  //FOR FUTURE WHERE WE GET DATA FROM BACKEND (restaurants and iframe data)
-  // Uncomment the following useEffect to fetch data from backend when available
-  
-  // // Fetch restaurants and initial iframeData from backend
-  // useEffect(() => {
-  //   // Example: Replace with your actual API calls
-  //   fetch("/api/restaurants")
-  //     .then(res => res.json())
-  //     .then(data => setRestaurants(data))
-  //     .catch(() => setRestaurants([]));
+  // Fetch restaurants from backend
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      try {
+        const response = await getRestaurantsByCompanyId(); // Adjust based on your API return format
+        // console.log(response)
+        setAllRestaurants(response);
+        if (response && Array.isArray(response.data)) {
+          const restaurantNames = response.data.map((r) => r.restaurant_name);
+          setRestaurants(restaurantNames);
+          setRestaurantOptions(restaurantNames);
+          setFilteredRestaurants(restaurantNames); // Initialize filtered list too
+        } else {
+          throw new Error("Invalid restaurant data format");
+        }
+      } catch (error) {
+        console.error("❌ Failed to fetch restaurants:", error);
+        toast.error("Failed to load restaurant list.");
+      }
+    };
 
-  //   fetch("/api/iframe-data")
-  //     .then(res => res.json())
-  //     .then(data => setIframeData(data))
-  //     .catch(() => setIframeData({}));
-  // }, []);
+    fetchRestaurants();
+  }, []);
 
   // Validate dates
   const validateDates = useCallback((from, to) => {
@@ -72,7 +82,7 @@ const Dashboard = () => {
       if (validateDates(from, to)) {
         // ADD A BACKEND CALL HERE TO APPLY THE FILTER---------------------------------
         // LET SAY WE GOT AN I FRAME IN THE DASHBOARD THAT SHOWS THE DATA now send it to DashboardIframe component
-        const iframe= {}
+        const iframe = {}
         setIframeData(iframe);
         console.log("Filter applied with dates:", from, to);
         setActive("prime");
@@ -123,18 +133,18 @@ const Dashboard = () => {
     <div className="flex flex-col items-center bg-[var(--background)] overflow-scroll max-md:p-3">
       {/* Top Section */}
       <section className="flex flex-col justify-between bg-[var(--background)] items-center w-full gap-[15px] p-5 pt-7 max-md:p-0">
-      <div className="flex flex-col justify-between gap-[15px] items-start w-[100%]">
-        <h1 className="text-3xl font-bold text-[var(--primary-black)]  ">Dashboard</h1>
-        <div className="flex w-[clamp(200px,50%,600px)] text-[var(--primary-black)] h-fit max-md:w-full">
-          <RestaurantDropdown
-            options={restaurants}
-            selected={selected}
-            setSelected={setSelected}
-            onSubmit={onSubmit}
-          />
+        <div className="flex flex-col justify-between gap-[15px] items-start w-[100%]">
+          <h1 className="text-3xl font-bold text-[var(--primary-black)]  ">Dashboard</h1>
+          <div className="flex w-[clamp(200px,50%,600px)] text-[var(--primary-black)] h-fit max-md:w-full">
+            <RestaurantDropdown
+              options={restaurants}
+              selected={selected}
+              setSelected={setSelected}
+              onSubmit={onSubmit}
+            />
+          </div>
         </div>
-      </div>
-        
+
       </section>
 
       {/* Bottom Section */}

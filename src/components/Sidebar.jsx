@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   LayoutDashboard, Wallet, HandCoins, Book, Users,
-  MapPinned, UserRoundPen, Menu , X,LayoutList, ListChecks  
+  MapPinned, UserRoundPen, Menu, X, LayoutList, ListChecks
 } from 'lucide-react';
-import logo from '../assets/images/Black-Logo.png';
+import logo from '../assets/images/logo.png';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ const PAGE_TO_ROUTE = {
 };
 
 const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages }) => {
-  
+
   const navigate = useNavigate();
   const toggleSidebar = () => setIsOpen(!isOpen);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -54,7 +54,7 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
   useEffect(() => {
     setFilteredNavItems(navItems.filter(item => allowedPages.includes(item.name)));
   }, [allowedPages]);
-  
+
   return (
     <div className={`
       flex flex-col justify-between
@@ -62,14 +62,14 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
       transition-all duration-240 ease-in-out select-none pb-2
       border-[#00000033] border-r-1 z-3
       max-md:absolute
-      ${isOpen?'':'max-md:translate-x-[-52px]'}
+      ${isOpen ? '' : 'max-md:translate-x-[-52px]'}
     `}>
-      
+
       {/* Navigation Section */}
       <nav className={`flex flex-col  ${isOpen ? 'w-[240px]' : 'w-fit'}`}>
-      <div className={`h-[50px] ${isOpen?'aspect-[2.5]':''} flex items-center justify-center mb-2`}>
-          <img src={logo} alt="logo" className={`px-5 w-full ${isOpen?'block':'hidden'} bg-white`} />
-      </div>
+        <div className={`h-[60px] ${isOpen ? 'aspect-[2.5]' : ''} flex items-center justify-center`}>
+          <img src={logo} alt="logo" className={`py-1 h-full w-8/10 ${isOpen ? 'block' : 'hidden'} bg-white`} />
+        </div>
         {filteredNavItems.map((item) => {
           const isActive = activePage === item.name;
           return (
@@ -78,9 +78,9 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
               onClick={() => handleClick(item.name)}
               className={`
                         flex items-center gap-[10px] p-3.5 cursor-pointer hover:brightness-90
-                        ${isActive ? 'bg-[var(--primary-blue)] text-white font-semibold'  
-                                          : `${isOpen ? 'bg-white text-primary-black' 
-                                                      :' bg-white text-primary-black font-semibold'}`}
+                        ${isActive ? 'bg-[var(--primary-blue)] text-white font-semibold'
+                  : `${isOpen ? 'bg-white text-primary-black'
+                    : ' bg-white text-primary-black font-semibold'}`}
                       `}
             >
               <item.icon size={24} />
@@ -103,9 +103,9 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
           }}
           className={`
             flex items-center gap-[10px] p-3
-            ${activePage === 'My Profile' ? 'bg-[var(--primary-blue)] text-white font-semibold'  
-                                          : `${isOpen ? 'bg-white text-primary-black' 
-                                                      :' bg-white text-primary-black font-semibold'}`}
+            ${activePage === 'My Profile' ? 'bg-[var(--primary-blue)] text-white font-semibold'
+              : `${isOpen ? 'bg-white text-primary-black'
+                : ' bg-white text-primary-black font-semibold'}`}
             hover:brightness-90 cursor-pointer
           `}
         >
@@ -117,8 +117,8 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
           onClick={toggleSidebar}
           className={`
             flex items-center gap-[10px] p-3
-            ${isOpen ? 'bg-white text-primary-black' 
-                     : 'text-primary-black font-semibold'}
+            ${isOpen ? 'bg-white text-primary-black'
+              : 'text-primary-black font-semibold'}
             hover:brightness-90 cursor-pointer
             fixed
             top-0
@@ -127,16 +127,16 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
             z-99999999999999999
           `}
           style={{
-            transform: `translateX(${isOpen ? '240px' : '52px'})` 
+            transform: `translateX(${isOpen ? '240px' : '52px'})`
           }}
         >
           {isOpen ? (
             <>
-              <X  size={24} />
+              <X size={24} />
               <span className="text-base leading-none hidden">Close</span>
             </>
           ) : (
-            <Menu  size={24} />
+            <Menu size={24} />
           )}
         </div>
       </div>

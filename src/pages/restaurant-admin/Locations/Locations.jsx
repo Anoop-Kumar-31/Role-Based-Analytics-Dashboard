@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef} from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Pencil } from "lucide-react";
 import Table from "../../../components/Table";
 import PopUp from "./PopUp";
@@ -25,8 +25,7 @@ const Locations = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState({});
   const hasFetched = useRef(false);
   const user = useSelector((state) => state.auth.user);
-  const user_id = user?.id;
-  // console.log(user);
+  const user_id = user?.user_id;
 
   // ⏬ Fetch restaurants
   useEffect(() => {
@@ -34,6 +33,7 @@ const Locations = () => {
     hasFetched.current = true;
 
     const fetchRestaurants = async () => {
+      console.log('user_id', user_id)
       try {
         const response = await toast.promise(
           getUserRestaurants(user_id),
@@ -44,12 +44,13 @@ const Locations = () => {
           },
           { success: { duration: 2000 }, error: { duration: 2000 } }
         );
+        console.log('response', response)
         if (response?.restaurants) {
           setAllResponse(response.restaurants);
-          const mapped = response.restaurants.map(({ restaurant_name, restaurant_location, updated_at }) => ({
+          const mapped = response.restaurants.map(({ restaurant_name, restaurant_location, updatedAt }) => ({
             name: restaurant_name,
             address: restaurant_location,
-            updateOn: updated_at ? new Date(updated_at).toLocaleDateString() : "N/A",
+            updateOn: updatedAt ? new Date(updatedAt).toLocaleDateString() : "N/A",
           }));
           setRestaurants(mapped);
         }
@@ -65,7 +66,7 @@ const Locations = () => {
   const handleEdit = (e, index) => {
     e.stopPropagation();
     setEditIndex(index);
-    console.log("selected res:\n",allResponse[index])
+    console.log("selected res:\n", allResponse[index])
     setSelectedRestaurant(allResponse[index])
     setPopup(true);
     console.log("Edit index:", popUp);
@@ -75,10 +76,10 @@ const Locations = () => {
   const handleOnClose = useCallback((res) => {
     setPopup(false);
     res &&
-          toast.success("User's data Updated successfully!", {
-            position: "top-center",
-            duration: 2000,
-          })
+      toast.success("User's data Updated successfully!", {
+        position: "top-center",
+        duration: 2000,
+      })
   }, []);
 
   return (

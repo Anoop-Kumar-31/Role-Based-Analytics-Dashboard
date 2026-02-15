@@ -9,7 +9,6 @@ import Table from "../../../components/Table";
 import ConfirmationPopUp from "../../../components/ConfirmationPopUp";
 import ReportRevenueForm from "./ReportRevenueForm"; // Modal for add/edit revenue
 import { getAllRevenues, deleteRevenue } from "../../../services/modules/restaurantService";
-import { getRestaurantsByCompanyId } from "../../../services/modules/restaurantService";
 
 // Table headings - kept as is
 const HeadingData = {
@@ -52,25 +51,30 @@ const Revenue = () => {
   const [shouldRefetch, setShouldRefetch] = useState(0); // Using a counter for reliability
 
   // Ref to prevent double-fetch in React StrictMode on initial mount
-  const hasFetchedOnce = useRef(false);
+  const hasFetchedInitial = useRef(false);
 
   const userData = useSelector((state) => state.auth.user);
 
   // --- Data Fetching Effect ---
   useEffect(() => {
-    if (!userData?.id) return; // 🚨 don't fetch until we have a valid user id
-    if (hasFetchedOnce.current && shouldRefetch === 0) return;
-    hasFetchedOnce.current = true;
-
-
+    // Prevent double-fetch in StrictMode during development
+    if (hasFetchedInitial.current === false) {
+      hasFetchedInitial.current = true;
+      // Continue to fetch data
+    } else if (shouldRefetch === 0) {
+      // If shouldRefetch is 0, it means it's the very first render after initial StrictMode run,
+      // or subsequent renders without a fetch trigger. We only want to fetch if `shouldRefetch` changes.
+      return;
+    }
 
     const fetchRevenues = async () => {
       setIsLoading(true); // Set loading true when fetch starts
       setApiError(false); // Clear previous errors
 
       try {
+        console.log(userData.user_id)
         const response = await toast.promise(
-          getAllRevenues([], userData.id),
+          getAllRevenues([], userData.user_id),
           {
             loading: "Fetching revenues...",
             success: "Revenues fetched successfully!",
@@ -82,13 +86,14 @@ const Revenue = () => {
         if (!response || !response.data) {
           throw new Error("Invalid response data.");
         }
+        console.log(response.data)
 
         setRawRevenueData(response.data); // Store raw data
 
         const mapped = response.data.map((rev) => ({
           submissionDate: new Date(rev.creation_time).toLocaleDateString(),
           restaurant_name: rev.restaurant?.restaurant_name, // Optional chaining for safety
-          user_email: rev.user?.user_email, // Optional chaining for safety
+          user_email: rev.user_email || rev.user?.email, // Optional chaining for safety
           beginning_date: rev.beginning_date,
           ending_date: rev.ending_date,
           total_amount: rev.total_amount,
@@ -99,11 +104,9 @@ const Revenue = () => {
           beer_sale: rev.beer_sale,
           liquor_sale: rev.liquor_sale,
           wine_sale: rev.wine_sale,
-          bevarage_sale: rev.bevarage_sale,
+          beverage_sale: rev.beverage_sale,
           other_sale: rev.other_sale,
           total_guest: rev.total_guest,
-          // Keep original ID for actions (edit/delete)
-          // revenue_id: rev.revenue_id,
         }));
 
         setRevenueList(mapped);
@@ -131,7 +134,7 @@ const Revenue = () => {
   // Handle edit action from table
   const handleEdit = useCallback((rowIndex) => {
     setEditIndex(rowIndex);
-    const revenue = {...revenueList[rowIndex], revenue_id: rawRevenueData[rowIndex].revenue_id}; // Clone revenue object
+    const revenue = { ...revenueList[rowIndex], revenue_id: rawRevenueData[rowIndex].revenue_id }; // Clone revenue object
     setSelectedRevenue(revenue); // Use data for editing
     setFormType("edit");
     setIsFormOpen(true);
@@ -187,7 +190,7 @@ const Revenue = () => {
         <ReportRevenueForm
           onClose={handleOnClose}
           data={selectedRevenue}
-          formType = {formType}
+          formType={formType}
         />
       )}
 

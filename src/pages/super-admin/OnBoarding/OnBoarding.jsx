@@ -32,8 +32,10 @@ const PendingOnboarding = () => {
   const fetchCompanies = useCallback(async () => {
     setLoading(true);
     try {
+      console.log("Fetching pending companies...");
       const { data } = await getAllPendingCompanies();
       setCompanies(data || []);
+      console.log(data)
     } catch (err) {
       toast.error("Failed to load pending companies");
       console.error("Error fetching pending:", err);
@@ -49,14 +51,26 @@ const PendingOnboarding = () => {
   // Table body mapping
   const tableData = useMemo(
     () =>
-      companies.map((company) => [
-        company.created_at && new Date(company.created_at).toLocaleDateString(), // Submission Date
-        company.company_name, // Name
-        company.company_email, // Email
-        company.company_contact_no, // Phone Number
-        company.preferred_contact_method, // Pref Contact
-        String(company.restaurants.length), // Restaurants Count
-      ]),
+      companies.map((company) => {
+        // Format date as DD-MM-YYYY
+        let formattedDate = "";
+        if (company.createdAt) {
+          const date = new Date(company.createdAt);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const year = date.getFullYear();
+          formattedDate = `${day}-${month}-${year}`;
+        }
+
+        return [
+          formattedDate, // Submission Date in DD-MM-YYYY format
+          company.company_name, // Name
+          company.company_email, // Email
+          company.company_phone, // Phone Number
+          company.preferred_contact_method || "N/A", // Pref Contact (not in API response)
+          String(company.restaurants?.length || 0), // Restaurants Count
+        ];
+      }),
     [companies]
   );
 
@@ -146,9 +160,9 @@ const PendingOnboarding = () => {
       {/* Table */}
       <section className="py-4 w-full h-fit overflow-scroll flex justify-start max-md:px-1">
         {loading ? (
-          <div className="text-center w-full py-10">Loading pending requests...</div>
+          <div className="text-center text-gray-600 w-full py-10">Loading pending requests...</div>
         ) : companies.length === 0 ? (
-          <div className="text-center w-full py-10">No onboarding requests found.</div>
+          <div className="text-center text-gray-600 w-full py-10">No onboarding requests found.</div>
         ) : (
           <Table
             HeadingData={HeadingData}

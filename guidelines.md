@@ -1,5 +1,8 @@
 # Project Guidelines
 
+> **Personal Development Standards** - These are the coding guidelines and best practices I follow for this project.
+
+
 ## 1. Component Structure & Size
 - **JSX components must be under 200 lines.**
   - If a component grows beyond 200 lines, split it into smaller, reusable components.

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef} from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Pencil } from "lucide-react";
 import Table from "../../../../components/Table";
 import PopUp from "./PopUp";
@@ -17,7 +17,7 @@ const HeadingData = {
   ],
 };
 
-const Locations = ({company_id}) => {
+const Locations = ({ company_id }) => {
   console.log(company_id);
   const [popUp, setPopup] = useState(false);
   const [restaurants, setRestaurants] = useState(mockData);
@@ -30,11 +30,12 @@ const Locations = ({company_id}) => {
 
   // ⏬ Fetch restaurants
   useEffect(() => {
-    if (!user_id || hasFetched.current) return;
+    if (!company_id || hasFetched.current) return;
     hasFetched.current = true;
 
     const fetchRestaurants = async () => {
       try {
+        console.log('get restaurants locations for company:', company_id)
         const response = await toast.promise(
           getRestaurantsByCompanyId(company_id),
           {
@@ -44,15 +45,16 @@ const Locations = ({company_id}) => {
           },
           { success: { duration: 2000 }, error: { duration: 2000 } }
         );
-        console.log(response)
+        console.log('get restaurants locations', response)
         if (response?.data) {
+          console.log('get restaurants locations', response.data)
           setAllResponse(response.data);
           const mapped = response.data.map(({ restaurant_name, restaurant_location, updated_at }) => ({
             name: restaurant_name,
             address: restaurant_location,
             updateOn: updated_at ? new Date(updated_at).toLocaleDateString() : "N/A",
           }));
-          console.log(mapped)
+          console.log('mapped', mapped)
           setRestaurants(mapped);
         }
       } catch (error) {
@@ -61,12 +63,12 @@ const Locations = ({company_id}) => {
     };
 
     fetchRestaurants();
-  }, [user_id]);
+  }, [company_id]);
 
   // Handle edit
   const handleEdit = (e, index) => {
     e.stopPropagation();
-    console.log("selected res:\n",allResponse[index])
+    console.log("selected res:\n", allResponse[index])
     setSelectedRestaurant(allResponse[index])
     setPopup(true);
     console.log("Edit index:", popUp);
@@ -76,10 +78,10 @@ const Locations = ({company_id}) => {
   const handleOnClose = useCallback((res) => {
     setPopup(false);
     res &&
-          toast.success("User's data Updated successfully!", {
-            position: "top-center",
-            duration: 2000,
-          })
+      toast.success("User's data Updated successfully!", {
+        position: "top-center",
+        duration: 2000,
+      })
   }, []);
 
   return (
@@ -102,24 +104,24 @@ const Locations = ({company_id}) => {
 
           {/* Table Section */}
           <section className=" py-[30px] pb-[120px] w-[100%] overflow-scroll flex justify-start max-md:px-1">
-            {restaurants.length === 0?
-             <h1>No registered restaurants under this Company</h1>
-             :
+            {restaurants.length === 0 ?
+              <h1>No registered restaurants under this Company</h1>
+              :
               <Table
-              HeadingData={HeadingData}
-              bodyData={restaurants}
-              actionData={[
-                ({ rowIndex }) => (
-                  <Pencil
-                    size={16}
-                    strokeWidth={3}
-                    color="#559955"
-                    style={{ cursor: "pointer" }}
-                    onClick={(e) => handleEdit(e, rowIndex)}
-                  />
-                )
-              ]}
-            />}
+                HeadingData={HeadingData}
+                bodyData={restaurants}
+                actionData={[
+                  ({ rowIndex }) => (
+                    <Pencil
+                      size={16}
+                      strokeWidth={3}
+                      color="#559955"
+                      style={{ cursor: "pointer" }}
+                      onClick={(e) => handleEdit(e, rowIndex)}
+                    />
+                  )
+                ]}
+              />}
           </section>
         </>
       )}

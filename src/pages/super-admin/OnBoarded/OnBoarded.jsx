@@ -7,16 +7,18 @@ import toast from "react-hot-toast";
 import { getAllOnboardedCompanies, toggleCompanyStatus } from '../../../services/modules/companyService';
 import Locations from "./Locations/Locations";
 
-const HeadingData = { th: [
-  { title: "Restaurant ID" },
-  { title: "Restaurant Name" },
-  { title: "Email" },
-  { title: "Contact" },
-  { title: "Locations" },
-  { title: "Status" },
-  { title: "Update Time" },
-  { title: "Action" },
-]};
+const HeadingData = {
+  th: [
+    { title: "Restaurant ID" },
+    { title: "Restaurant Name" },
+    { title: "Email" },
+    { title: "Contact" },
+    { title: "Locations" },
+    { title: "Status" },
+    { title: "Update Time" },
+    { title: "Action" },
+  ]
+};
 
 const OnBoarded = () => {
   const [showLocations, setShowLocation] = useState(false);
@@ -31,6 +33,7 @@ const OnBoarded = () => {
     setLoading(true);
     try {
       const { data } = await getAllOnboardedCompanies();
+      console.log(data)
       setCompanies(data || []);
     } catch {
       toast.error("Failed to load companies");
@@ -50,7 +53,7 @@ const OnBoarded = () => {
       onClick={() => { setShowLocation(true); setSelectedCompany(company); }}
       className="font-semibold text-green-700 flex items-center cursor-pointer"
     >
-      View <Eye size={15} className="ml-1"/>
+      View <Eye size={15} className="ml-1" />
     </button>,
     company.is_active ? "Active" : "Inactive",
     company.updated_at ? new Date(company.updated_at).toLocaleString() : '--',
@@ -106,9 +109,9 @@ const OnBoarded = () => {
         </div>
       </section>
       {loading ? (
-        <div className="text-center py-10">Loading companies...</div>
+        <div className="text-center py-10 text-gray-600">Loading companies...</div>
       ) : companies.length === 0 ? (
-        <div className="text-center py-10">No onboarded companies found.</div>
+        <div className="text-center py-10 text-gray-600">No onboarded companies found.</div>
       ) : (
         <Table
           HeadingData={HeadingData}

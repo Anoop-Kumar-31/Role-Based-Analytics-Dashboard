@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { FiSearch, FiFilter, FiRefreshCw, FiDownload } from "react-icons/fi";
 import { Pencil, Trash2 } from "lucide-react";
-import mockData from "./mockData.json";
+// import mockData from "./mockData.json";
 import toast from "react-hot-toast";
 // import "react-hot-toast/dist/ReactToastify.css";
 import Table from "../../../components/Table";
@@ -29,7 +29,7 @@ const Expense = () => {
   const [popup, setPopup] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [selectedExpense, setSelectedExpense] = useState({});
-  const [expenseList, setExpenseList] = useState(mockData);
+  const [expenseList, setExpenseList] = useState([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [type, setType] = useState("create");
@@ -60,15 +60,17 @@ const Expense = () => {
           },
           { success: { duration: 3500 }, error: { duration: 2000 } }
         );
+
+        console.log(response)
         if (!response || !response.data) throw new Error('Invalid response');
 
-        setAllExpenses(response.data);
-        const formatted = response.data.map(expense => ({
-          submissionDate: new Date(expense.created_at).toLocaleDateString(),
+        setAllExpenses(response.data.expenses);
+        const formatted = response.data.expenses.map(expense => ({
+          submissionDate: new Date(expense.createdAt).toLocaleDateString(),
           restaurantName: expense.restaurant?.restaurant_name || 'Unknown',
-          email: expense.user.user_email || 'N/A',
-          expenseDate: expense.expense_date,
-          reportingType: expense.expenseCategory?.category_name || 'Unknown',
+          email: expense.user.email || 'N/A',
+          expenseDate: expense.date,
+          reportingType: expense.category || 'Unknown',
         }));
 
         setExpenseList(formatted);
@@ -83,67 +85,83 @@ const Expense = () => {
     fetchExpenses();
   }, [shouldRefetch]);
 
+
+  // Commented out until real expense added IMPORTANT Don't remove this code below
+  // const handleDownload = () => {
+  //   if (!allExpenses || allExpenses.length === 0) {
+  //     toast.error("No expenses available to download");
+  //     return;
+  //   }
+
+  //   // Filter only expenses with category "Invoice"
+  //   const invoiceExpenses = allExpenses.filter(
+  //     expense => expense.expenseCategory?.category_name === "Invoice"
+  //   );
+
+  //   if (invoiceExpenses.length === 0) {
+  //     toast.error("No invoice expenses available to download");
+  //     return;
+  //   }
+
+  //   // Define the sales categories you want as columns (match your XLS columns)
+  //   const salesCategories = [
+  //     "Beer",
+  //     "Liquor",
+  //     "Wine",
+  //     "Beverage",
+  //     "Food",
+  //     "Pastry",
+  //     "Retail",
+  //   ];
+
+  //   // Transform data to appropriate export format
+  //   const dataForExport = invoiceExpenses.map(expense => {
+  //     // Initialize with zeros
+  //     const categorySums = salesCategories.reduce((acc, cat) => {
+  //       acc[`${cat} Expense`] = 0;
+  //       return acc;
+  //     }, {});
+
+  //     // Sum unit_price for each sales_category_name
+  //     for (const invoice of expense.invoices || []) {
+  //       const catName = invoice.sales_category?.sales_category_name;
+  //       if (salesCategories.includes(catName)) {
+  //         categorySums[`${catName} Expense`] += invoice.unit_price || 0;
+  //       }
+  //     }
+
+  //     return {
+  //       "Restaurant Name": expense.restaurant?.restaurant_name || "Unknown",
+  //       "Expense Date": expense.expense_date,
+  //       ...categorySums
+  //     };
+  //   });
+
+  //   // Create a new workbook and worksheet
+  //   const wb = XLSX.utils.book_new();
+  //   const ws = XLSX.utils.json_to_sheet(dataForExport);
+
+  //   // Append worksheet to workbook
+  //   XLSX.utils.book_append_sheet(wb, ws, "Expenses");
+
+  //   // Generate XLSX file buffer
+  //   const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+
+  //   // Save the file
+  //   saveAs(
+  //     new Blob([wbout], { type: "application/octet-stream" }),
+  //     `Expense_Report_${new Date().toISOString().slice(0, 10)}.xlsx`
+  //   );
+  // };
+  //-------------------------------------------------------------------------------
+
+  // Dummy download function till no real expense added
   const handleDownload = () => {
-    if (!allExpenses || allExpenses.length === 0) {
-      toast.error("No expenses available to download");
-      return;
-    }
-
-    // Filter only expenses with category "Invoice"
-    const invoiceExpenses = allExpenses.filter(
-      expense => expense.expenseCategory?.category_name === "Invoice"
-    );
-
-    if (invoiceExpenses.length === 0) {
-      toast.error("No invoice expenses available to download");
-      return;
-    }
-
-    // Define the sales categories you want as columns (match your XLS columns)
-    const salesCategories = [
-      "Beer",
-      "Liquor",
-      "Wine",
-      "Beverage",
-      "Food",
-      "Pastry",
-      "Retail"
-    ];
-
-    // Transform data to appropriate export format
-    const dataForExport = invoiceExpenses.map(expense => {
-      // Initialize with zeros
-      const categorySums = salesCategories.reduce((acc, cat) => {
-        acc[`${cat} Expense`] = 0;
-        return acc;
-      }, {});
-
-      // Sum unit_price for each sales_category_name
-      for (const invoice of expense.invoices || []) {
-        const catName = invoice.sales_category?.sales_category_name;
-        if (salesCategories.includes(catName)) {
-          categorySums[`${catName} Expense`] += invoice.unit_price || 0;
-        }
-      }
-
-      return {
-        "Restaurant Name": expense.restaurant?.restaurant_name || "Unknown",
-        "Expense Date": expense.expense_date,
-        ...categorySums
-      };
-    });
-
-    // Create a new workbook and worksheet
+    // just download eveything on tabel
     const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(dataForExport);
-
-    // Append worksheet to workbook
+    const ws = XLSX.utils.json_to_sheet(expenseList);
     XLSX.utils.book_append_sheet(wb, ws, "Expenses");
-
-    // Generate XLSX file buffer
     const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-
-    // Save the file
     saveAs(
       new Blob([wbout], { type: "application/octet-stream" }),
       `Expense_Report_${new Date().toISOString().slice(0, 10)}.xlsx`
@@ -174,8 +192,8 @@ const Expense = () => {
     setConfirmOpen(true);
   }, []);
 
-  const confirmDelete = async() => {
-    try{
+  const confirmDelete = async () => {
+    try {
       const res = await toast.promise(
         deleteExpense(allExpenses[deleteIndex].expense_id),
         {
@@ -186,7 +204,7 @@ const Expense = () => {
         { success: { duration: 3500 }, error: { duration: 2000 } }
       );
       setShouldRefetch(prev => prev + 1);
-    }catch(err){
+    } catch (err) {
       console.error('Delete expense error:', err);
       toast.error("Failed to delete expense entry.", { position: "top-center", duration: 2000 });
     }
@@ -254,37 +272,47 @@ const Expense = () => {
 
           {/* Table */}
           <section className="py-6 w-full h-fit overflow-x-auto flex justify-start max-md:px-1">
-            <Table
-              HeadingData={HeadingData}
-              bodyData={expenseList}
-              actionData={[
-                ({ rowIndex }) => (
-                  <Pencil
-                    key={`edit-${rowIndex}`}
-                    size={16}
-                    strokeWidth={3}
-                    color="#559955"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleEdit(rowIndex)}
-                  />
-                ),
-                ({ rowIndex }) => (
-                  <Trash2
-                    key={`delete-${rowIndex}`}
-                    size={16}
-                    strokeWidth={3}
-                    color="#ff0022"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleDelete(rowIndex)}
-                  />
-                ),
-              ]}
-              type="special"
-            />
+            {apiError ? (
+              <p className="text-red-600 text-center w-full">
+                Failed to load revenue data. Please try again.
+              </p>
+            ) : isLoading ? (
+              <p className="text-gray-600 text-center w-full">Loading revenues...</p>
+            ) : expenseList.length === 0 ? (
+              <p className="text-gray-600 text-center w-full">No revenue data available.</p>
+            ) : (
+              <Table
+                HeadingData={HeadingData}
+                bodyData={expenseList}
+                actionData={[
+                  ({ rowIndex }) => (
+                    <Pencil
+                      key={`edit-${rowIndex}`}
+                      size={16}
+                      strokeWidth={3}
+                      color="#559955"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleEdit(rowIndex)}
+                    />
+                  ),
+                  ({ rowIndex }) => (
+                    <Trash2
+                      key={`delete-${rowIndex}`}
+                      size={16}
+                      strokeWidth={3}
+                      color="#ff0022"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleDelete(rowIndex)}
+                    />
+                  ),
+                ]}
+                type="special"
+              />
+            )}
           </section>
         </>
-      :
-          <ReportExpenseForm onClose={handleOnClose} data={selectedExpense} type={type}/>
+        :
+        <ReportExpenseForm onClose={handleOnClose} data={selectedExpense} type={type} />
       }
 
       {/* Confirmation PopUp */}

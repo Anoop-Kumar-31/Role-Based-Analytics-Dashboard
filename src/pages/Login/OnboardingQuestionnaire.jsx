@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
-import BlackLogo from "../../assets/images/Black-Logo.png"; 
+import logo from "../../assets/images/logo.png";
 import { X } from "lucide-react";
 import { onboarding } from "../../services/modules/authService";
 
@@ -95,37 +95,38 @@ const OnboardingQuestionnaire = ({ onClose }) => {
       },
     };
 
-  try {
-    const res = await toast.promise(
-      onboarding(payload),
-      {
-        loading: "Onboarding in progress...",
-        success: (res) => {
-          // you can inspect response here and decide message
-          console.log("Success response:", res);
-          return "Onboarding successful!";
-        },
-        error: (err) => {
-          const errMsg = err?.error || String(err);
-          if (errMsg.includes("already exists")) {
-            toast('Try to Login!', {
-              icon: '🔗',
-            });
-            return "Used Email already registered.";
-          }
-          return "Failed to onboard user. Please try again.";
-        },
-      }
-    );
-    onClose();
+    try {
+      console.log(payload)
+      const res = await toast.promise(
+        onboarding(payload),
+        {
+          loading: "Onboarding in progress...",
+          success: (res) => {
+            // you can inspect response here and decide message
+            console.log("Success response:", res);
+            return "Onboarding successful!";
+          },
+          error: (err) => {
+            const errMsg = err?.error || String(err);
+            if (errMsg.includes("already exists")) {
+              toast('Try to Login!', {
+                icon: '🔗',
+              });
+              return "Used Email already registered.";
+            }
+            return "Failed to onboard user. Please try again.";
+          },
+        }
+      );
+      onClose();
 
-  } catch (err) {
-    console.error("Unexpected error caught:", err.error);
-    // onClose();
-  } finally {
-    setLoading(false);
+    } catch (err) {
+      console.error("Unexpected error caught:", err.error);
+      // onClose();
+    } finally {
+      setLoading(false);
+    }
   }
-}
 
   // step titles
   const stepTitles = {
@@ -138,9 +139,9 @@ const OnboardingQuestionnaire = ({ onClose }) => {
     <div className="fixed inset-0 z-[1000001] bg-blue-100 flex flex-col items-center overflow-y-auto py-10">
       {/*  Logo  */}
       <img
-        src={BlackLogo}
-        alt="Breadcrumbs Logo"
-        className="h-18 text-semibold mb-6 object-contain max-md:w-[60%] max-md:mb-10"
+        src={logo}
+        alt="App Logo"
+        className="h-25 text-semibold mb-1 object-contain max-md:w-[60%] max-md:mb-5"
       />
 
       {/*  form box  */}
@@ -149,10 +150,10 @@ const OnboardingQuestionnaire = ({ onClose }) => {
         {/* Close Button */}
         <div className="text-end mb-4 absolute top-4 right-4">
           <button
-            onClick={()=>onClose()}
+            onClick={() => onClose()}
             className="text-3xl text-gray-500 hover:text-gray-800"
           >
-            <X size={24}/>
+            <X size={24} />
           </button>
         </div>
 
@@ -185,7 +186,7 @@ const OnboardingQuestionnaire = ({ onClose }) => {
             title={stepTitles[step]}
             toast={toastData}
             setToastData={setToastData}
-            onSubmit={()=>handleSubmit()}
+            onSubmit={() => handleSubmit()}
           />
         )}
       </div>

@@ -199,7 +199,7 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
       throw error;
     }
   };
-    
+
   const normalizeCategory = (cat) => {
     if (cat === "Non-Alcoholic Beverages") return "NA Beverage";
     // add more mappings here if needed in future
@@ -261,6 +261,12 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
       formPayload.append("amounts", JSON.stringify(amounts));
       formPayload.append("submission_date", new Date().toISOString().split("T")[0]);
 
+      // Log FormData contents (FormData doesn't show in console.log normally)
+      console.log("FormData contents:");
+      for (let [key, value] of formPayload.entries()) {
+        console.log(key, value);
+      }
+
       toast.promise(
         createExpense(formPayload, { headers: { "Content-Type": "multipart/form-data" } }),
         {
@@ -279,7 +285,7 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
           duration: 2000,
         }
       );
-      
+
     } else {
       toast.promise(
         updateExpense(data.expense_id, formPayload, { headers: { "Content-Type": "multipart/form-data" } }),
@@ -412,7 +418,7 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
               <div
                 className={`w-full my-4 border-2 border-dashed rounded-md flex flex-col items-center justify-center py-8 cursor-pointer 
                   ${dragActive ? "border-blue-600 bg-blue-100" : "border-gray-400 bg-white"}`}
-                
+
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -439,7 +445,7 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
                 {file && (
                   <div className="mt-2 text-green-700 text-sm">{file.name}</div>
                 )}
-                <button 
+                <button
                   type="button"
                   onClick={handleRemoveFile}
                   className="mt-2 text-sm text-red-600 hover:underline"

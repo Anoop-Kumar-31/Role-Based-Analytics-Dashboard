@@ -33,10 +33,10 @@ import REBlueBook from "../pages/restaurant-employee/BlueBook/BlueBook";
 // Layout (generic)
 import PortalLayout from "../components/PortalLayout";
 
-const ProtectedRoute = ({ isLoggedIn, children }) =>
-  isLoggedIn ? children : <Navigate to="/login" replace />;
+const ProtectedRoute = ({ isLoggedIn, children }) => children
+// isLoggedIn ? children : <Navigate to="/login" replace />;
 
-const AppRoutes = ({ portal, isLoggedIn, handleLoginClose, PAGE_TO_ROUTE, PORTAL_PAGES, setPopup, setIsLoggedIn}) => (
+const AppRoutes = ({ portal, isLoggedIn, handleLoginClose, PAGE_TO_ROUTE, PORTAL_PAGES, setPopup, setIsLoggedIn }) => (
   <Routes>
     {/* Login Route */}
     <Route
@@ -52,7 +52,7 @@ const AppRoutes = ({ portal, isLoggedIn, handleLoginClose, PAGE_TO_ROUTE, PORTAL
         path="/"
         element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <PortalLayout allowedPages={PORTAL_PAGES.superAdmin} portal={portal} pageToRoute={PAGE_TO_ROUTE} setPopup={setPopup} setIsLoggedIn={setIsLoggedIn}/>
+            <PortalLayout allowedPages={PORTAL_PAGES.superAdmin} portal={portal} pageToRoute={PAGE_TO_ROUTE} setPopup={setPopup} setIsLoggedIn={setIsLoggedIn} />
           </ProtectedRoute>
         }
       >
@@ -71,7 +71,7 @@ const AppRoutes = ({ portal, isLoggedIn, handleLoginClose, PAGE_TO_ROUTE, PORTAL
         path="/"
         element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <PortalLayout allowedPages={PORTAL_PAGES.restaurantAdmin} portal={portal} pageToRoute={PAGE_TO_ROUTE} setPopup={setPopup} setIsLoggedIn={setIsLoggedIn}/>
+            <PortalLayout allowedPages={PORTAL_PAGES.restaurantAdmin} portal={portal} pageToRoute={PAGE_TO_ROUTE} setPopup={setPopup} setIsLoggedIn={setIsLoggedIn} />
           </ProtectedRoute>
         }
       >
@@ -90,7 +90,7 @@ const AppRoutes = ({ portal, isLoggedIn, handleLoginClose, PAGE_TO_ROUTE, PORTAL
         path="/"
         element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <PortalLayout allowedPages={PORTAL_PAGES.restaurantEmployee} portal={portal} pageToRoute={PAGE_TO_ROUTE} setPopup={setPopup} setIsLoggedIn={setIsLoggedIn}/>
+            <PortalLayout allowedPages={PORTAL_PAGES.restaurantEmployee} portal={portal} pageToRoute={PAGE_TO_ROUTE} setPopup={setPopup} setIsLoggedIn={setIsLoggedIn} />
           </ProtectedRoute>
         }
       >

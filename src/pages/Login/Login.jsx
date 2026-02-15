@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { X } from "lucide-react";
-import BlackLogo from "../../assets/images/Black-Logo.png";
+import logo from "../../assets/images/logo.png";
 import OnboardingQuestionnaire from "./OnboardingQuestionnaire";
 import { signin } from "../../services/modules/authService"; // <-- Import login API
 
@@ -14,7 +14,7 @@ const Login = ({ onClose }) => {
   const [showForgotModal, setShowForgotModal] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
-  
+
   const dispatch = useDispatch();
 
   // Add state for form fields and error
@@ -28,13 +28,15 @@ const Login = ({ onClose }) => {
     setError("");
     try {
       const res = await signin({ email, password });
+      console.log(res);
       // Get token from res.data.accessToken
-      const { accessToken, ...user } = res?.data;
+      const { accessToken, user } = res?.data;
+      // console.log(user)
 
       if (!accessToken || !user) {
         throw new Error("No response data from Server.");
       }
-      console.log(user, accessToken);
+      // console.log(user, accessToken);
       dispatch(setCredentials({ user, token: accessToken }));
 
       localStorage.setItem("activePage", "Dashboard");
@@ -63,7 +65,7 @@ const Login = ({ onClose }) => {
                 onClick={() => setShowForgotModal(false)}
                 className="text-xl hover:text-gray-200"
               >
-                <X size={24} className=" text-white hover:text-gray-300"/>
+                <X size={24} className=" text-white hover:text-gray-300" />
               </button>
             </div>
             <div className="px-6 py-5">
@@ -92,22 +94,23 @@ const Login = ({ onClose }) => {
       )}
 
       {/* Main Login Box */}
-      <div className="relative w-[500px] bg-white p-8 shadow-[lightgray_0_0_40px_-20px] rounded-2xl">
-        {/* ❌ Close Button */}
+      <div className="relative w-[500px] bg-white p-8 shadow-[lightgray_0_0_40px_-20px] rounded-2xl pt-3">
+        {/* ❌ Exit Button - Navigate to dashboard without login */}
         <button
           type="button"
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700"
-          onClick={()=> onClose(true)} //make it false fro real auth
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full p-1 transition-colors"
+          onClick={() => window.location.href = "/dashboard"}
+          title="Exit to Dashboard (Demo Mode)"
         >
           <X size={24} />
         </button>
 
         {/* Logo */}
-        <div className="mb-6 text-start">
+        <div className="mb-6 text-start flex justify-center">
           <img
-            src={BlackLogo}
-            alt="Breadcrumbs Logo"
-            className="h-10 w-auto object-contain"
+            src={logo}
+            alt="App Logo"
+            className="h-25 object-contain"
           />
         </div>
 
@@ -147,17 +150,21 @@ const Login = ({ onClose }) => {
             onClick={() => setShowPassword(!showPassword)}
             className="absolute top-4 right-4 text-gray-500"
           >
-            {showPassword ? <FiEyeOff size={18}/> : <FiEye size={18}/>}
+            {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
           </button>
         </div>
 
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg mb-4 disabled:opacity-60"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg mb-2 disabled:opacity-60"
         >
           {loading ? "Logging in..." : "Log in"}
         </button>
+
+        <p className="text-xs text-center text-gray-500 mb-4">
+          Or click the ✕ button above to continue in demo mode
+        </p>
 
         <div className="text-center">
           <p

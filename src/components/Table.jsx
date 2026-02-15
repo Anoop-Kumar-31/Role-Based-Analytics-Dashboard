@@ -2,7 +2,7 @@ import React from "react";
 
 const Table = ({ HeadingData, bodyData, actionData, type = "normal" }) => {
   return (
-    <div className="w-full overflow-x-auto rounded-2xl">
+    <div className="w-full overflow-x-auto rounded-2xl max-h-[calc(100vh-200px)]">
       <table className="w-full h-fit border-collapse text-[0.95rem] bg-white rounded-[15px] min-w-[700px]">
         <thead>
           <tr className=" border-b-2 border-[var(--light-grey)] text-sm">
@@ -15,7 +15,7 @@ const Table = ({ HeadingData, bodyData, actionData, type = "normal" }) => {
                     ${isSticky ? "sticky z-[1] left-0 bg-white" : ""}
                     ${index === HeadingData.th.length - 1 ? "text-center" : ""}
                     relative
-                    ${index== HeadingData.th.length - 1 ? 'flex justify-center ' : 'text-left'}
+                    ${index == HeadingData.th.length - 1 ? 'flex justify-center ' : 'text-left'}
                   `}
                 >
                   {isSticky && (
@@ -50,11 +50,11 @@ const Table = ({ HeadingData, bodyData, actionData, type = "normal" }) => {
                       ${value === "Inactive" || value === "Disabled" ? "text-red-700 font-semibold" : ""}
                       ${value === "View" ? "text-green-700 font-medium" : ""}
                     `}>
-                      {!value ? 
-                        <span >--</span> 
+                      {!value ?
+                        <span >--</span>
                         :
-                        ( idx === 0 
-                          ? <span className="font-semibold">{value}</span> 
+                        (idx === 0
+                          ? <span className="font-semibold">{value}</span>
                           : value
                         )
                       }

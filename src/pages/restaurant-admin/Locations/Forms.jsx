@@ -162,7 +162,7 @@ const CoGSTargetForm = ({ cogsTargetData = {}, setFormData }) => {
           updatedCogsTarget = {
             ...updatedCogsTarget,
             food: 0,
-            pastry:0,
+            pastry: 0,
             beer: 0,
             wine: 0,
             liquor: 0,
@@ -262,7 +262,7 @@ const RestaurantInfo = ({ restaurantData = {}, setFormData }) => {
   return (
     <div>
       <h2 className="text-3xl font-bold mb-4">Restaurant's Information</h2>
-      <div className="flex flex-row w-full gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Field type="text" label="Restaurant Name" value={restaurantData.restaurant_name ?? ""} onChange={v => handleChange("restaurant_name", v)} />
         <Field type="text" label="Location" value={restaurantData.restaurant_location ?? ""} onChange={v => handleChange("restaurant_location", v)} />
       </div>
@@ -273,8 +273,8 @@ const RestaurantInfo = ({ restaurantData = {}, setFormData }) => {
 // RevenueForm — now uses Field for months
 const RevenueForm = ({ revenueTargetsData = {}, setFormData }) => {
   const months = [
-    "january","february","march","april","may","june",
-    "july","august","september","october","november","december"
+    "january", "february", "march", "april", "may", "june",
+    "july", "august", "september", "october", "november", "december"
   ];
 
   const handleChange = useCallback(

@@ -1,11 +1,11 @@
 // src/App.jsx
 import "./App.css";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Suspense, lazy } from "react";
 import { BrowserRouter as Router, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
-import {  logout } from "./store/slices/authSlice";
+import { logout } from "./store/slices/authSlice";
 
 // import { ToastContainer } from "react-toastify";
 import toast, { Toaster } from 'react-hot-toast';
@@ -13,6 +13,9 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import Popup from "./components/Popup";
 import AppRoutes from "./routes/AppRoutes";
+
+// Lazy load PortalSwitcher
+// const PortalSwitcher = lazy(() => import("./pages/PortalSwitcher"));
 
 // Page sets per portal type
 const PORTAL_PAGES = {
@@ -40,13 +43,13 @@ function AppContent() {
   const [popup, setPopup] = useState(false);
   const [portal, setPortal] = useState("");
   const token = useSelector((state) => state.auth?.token);
-  
+
   const [isLoggedIn, setIsLoggedIn] = useState(!!(token || localStorage.getItem("x-access-token")));
-  
+
   const navigate = useNavigate();
-  
+
   const dispatch = useDispatch();
-  
+
   // Update isLoggedIn when redux token changes
   useEffect(() => {
     if (token) {
@@ -54,16 +57,16 @@ function AppContent() {
         const decoded = jwtDecode(token);
         const currentTime = Date.now() / 1000;
 
-        if (token){
-          setPortal(decoded.role=="Super_Admin"? "superAdmin" : decoded.role=="Company_Admin"? "restaurantAdmin" : "restaurantEmployee");
+        if (token) {
+          setPortal(decoded.role == "Super_Admin" ? "superAdmin" : decoded.role == "Company_Admin" ? "restaurantAdmin" : "restaurantEmployee");
         }
-        
+
         if (decoded.exp < currentTime) {
           // Token expired
           toast.error("Session expired. Please login again.");
           dispatch(logout());
           setIsLoggedIn(false);
-          navigate("/login");
+          // navigate("/login"); //comment it out for demon
         } else {
           setIsLoggedIn(true);
         }
@@ -71,16 +74,16 @@ function AppContent() {
         console.error("Invalid token:", error);
         dispatch(logout());
         setIsLoggedIn(false);
-        navigate("/login");
+        // navigate("/login"); //comment it out for demon
       }
     } else {
       setIsLoggedIn(false);
-      navigate("/login");
+      // navigate("/login"); //comment it out for demon
     }
   }, [token, dispatch, navigate]);
 
 
-  // Redirect based on login status
+  // Redirect based on login status (OPTIONAL FOR DEMO)
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/login", { replace: true });
@@ -97,14 +100,17 @@ function AppContent() {
       navigate("/dashboard");
     } else {
       setIsLoggedIn(false);
-      navigate("/login");
+      // navigate("/login");
+      navigate("/dashboard");
     }
   };
 
   return (
     <div className="App relative min-h-screen">
-      {/* Portal Switcher */}
-
+      {/* Portal Switcher - Suspended for lazy loading */}
+      {/* <Suspense fallback={<div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[9999]">Loading...</div>}>
+        <PortalSwitcher portal={portal} setPortal={setPortal} />
+      </Suspense> */}
 
       {/* Render all routes, pass portal info */}
       <AppRoutes
@@ -113,7 +119,7 @@ function AppContent() {
         handleLoginClose={handleLoginClose}
         PORTAL_PAGES={PORTAL_PAGES}
         PAGE_TO_ROUTE={PAGE_TO_ROUTE}
-        setPopup= {setPopup}
+        setPopup={setPopup}
         setIsLoggedIn={setPopup}
       />
 

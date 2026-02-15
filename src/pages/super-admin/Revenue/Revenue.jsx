@@ -85,13 +85,14 @@ const Revenue = () => {
         if (!response || !response.data) {
           throw new Error("Invalid response data.");
         }
+        console.log(response.data)
 
         setRawRevenueData(response.data); // Store raw data
 
         const mapped = response.data.map((rev) => ({
           submissionDate: new Date(rev.creation_time).toLocaleDateString(),
           restaurant_name: rev.restaurant?.restaurant_name, // Optional chaining for safety
-          user_email: rev.user?.user_email, // Optional chaining for safety
+          user_email: rev.user_email || rev.user?.email, // Optional chaining for safety
           beginning_date: rev.beginning_date,
           ending_date: rev.ending_date,
           total_amount: rev.total_amount,
@@ -102,11 +103,9 @@ const Revenue = () => {
           beer_sale: rev.beer_sale,
           liquor_sale: rev.liquor_sale,
           wine_sale: rev.wine_sale,
-          bevarage_sale: rev.bevarage_sale,
+          beverage_sale: rev.beverage_sale,
           other_sale: rev.other_sale,
           total_guest: rev.total_guest,
-          // Keep original ID for actions (edit/delete)
-          // revenue_id: rev.revenue_id,
         }));
 
         setRevenueList(mapped);
@@ -134,7 +133,7 @@ const Revenue = () => {
   // Handle edit action from table
   const handleEdit = useCallback((rowIndex) => {
     setEditIndex(rowIndex);
-    const revenue = {...revenueList[rowIndex], revenue_id: rawRevenueData[rowIndex].revenue_id}; // Clone revenue object
+    const revenue = { ...revenueList[rowIndex], revenue_id: rawRevenueData[rowIndex].revenue_id }; // Clone revenue object
     setSelectedRevenue(revenue); // Use data for editing
     setFormType("edit");
     setIsFormOpen(true);
@@ -190,7 +189,7 @@ const Revenue = () => {
         <ReportRevenueForm
           onClose={handleOnClose}
           data={selectedRevenue}
-          formType = {formType}
+          formType={formType}
         />
       )}
 

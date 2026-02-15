@@ -5,7 +5,7 @@ const base = "/api/v1";
 const endpoints = {
   // Onboarding
   onboarding: () => `${base}/onboarding`,
-    // app.patch(`${base}/reject/:company_id`, verifyToken, allowSuperAdminOnly, rest_onboardingController.markCompanyAsRejected);
+  // app.patch(`${base}/reject/:company_id`, verifyToken, allowSuperAdminOnly, rest_onboardingController.markCompanyAsRejected);
   rejectCopmany: (companyId) => `${base}/onboarding/reject/${companyId}`,
 
   // Auth (LOGIN)
@@ -85,7 +85,9 @@ const endpoints = {
   getRestaurantById: (restaurant_id) => `${base}/restaurants/${restaurant_id}`,
   updateRestaurant: (restaurant_id) => `${base}/restaurants/${restaurant_id}`,
   toggleRestaurantStatus: (restaurant_id) => `${base}/restaurants/${restaurant_id}`,
-  getAllRestaurants: (company_id = "") => `${base}/restaurants/by-company/${company_id}`,
+  getAllRestaurants: (company_id = "") => {
+    return company_id ? `${base}/restaurants/by-company/${company_id}` : `${base}/restaurants/by-company`;
+  },
 
   // POS
   createPos: (restaurant_id) => `${base}/restaurants/${restaurant_id}/pos`,
@@ -111,7 +113,7 @@ const endpoints = {
   getCogsInvoicesByUserId: (user_id) => `${base}/restaurants/invoice-category/cogs-invoice/by-user/${user_id}`,
   getCogsInvoicesByCategoryId: (category_id) => `${base}/restaurants/invoice-category/cogs-invoice/by-category/${category_id}`,
 
-  
+
   // Revenue (restaurants)
   createRevenue: (restaurant_id) => `${base}/restaurants/${restaurant_id}/revenue`,
   getAllRevenues: (res_ids = [], user_id = null) => {
@@ -127,7 +129,7 @@ const endpoints = {
 
   //Expense
   createExpense: () => `${base}/expense`,
-  getExpense: () => `${base}/expense`, //?page=${page}&pageSize=${pageSize}
+  getExpense: (company_id = '') => `${base}/expense/${company_id}`, //?page=${page}&pageSize=${pageSize}
   deleteExpense: (expenseId) => `${base}/expense/${expenseId}`,
   updateExpense: (expenseId) => `${base}/expense/${expenseId}`,
 

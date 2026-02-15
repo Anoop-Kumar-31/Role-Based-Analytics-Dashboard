@@ -62,27 +62,27 @@ const Users = () => {
           },
           { success: { duration: 2000 }, error: { duration: 2000 } }
         );
-
+        console.log(response)
         if (response && response.data) {
-          const mappedUsers = response.data.map(
+          const mappedUsers = response.data?.users?.map(
             ({
               user_id,
-              user_first_name,
-              user_last_name,
+              first_name,
+              last_name,
               company_name,
               restaurant_name,
-              user_phone_no,
-              user_email,
-              role_name,
+              phone_number,
+              email,
+              role,
               is_active,
             }) => ({
               user_id,
-              fullName: `${user_first_name} ${user_last_name}`,
+              fullName: `${first_name} ${last_name}`,
               company: company_name,
               restaurant: restaurant_name,
-              user_phone_no,
-              user_email,
-              role: role_name,
+              phone_number,
+              user_email: email,
+              role: role,
               status: is_active ? "Enabled" : "Disabled",
             })
           );
@@ -165,27 +165,29 @@ const Users = () => {
     setIsLoading(true);
     setApiError(false);
     try {
-      const response = await getAllUsers();
+      const response = await getAllUsers(company_id);
+      console.log(response)
       if (response && response.data) {
-        const mappedUsers = response.data.map(
+        console.log(response.data?.users)
+        const mappedUsers = response.data?.users?.map(
           ({
             user_id,
-            user_first_name,
-            user_last_name,
+            first_name,
+            last_name,
             company_name,
             restaurant_name,
-            user_phone_no,
-            user_email,
-            role_name,
+            phone_number,
+            email,
+            role,
             is_active,
           }) => ({
             user_id,
-            fullName: `${user_first_name} ${user_last_name}`,
+            fullName: `${first_name} ${last_name}`,
             company: company_name,
             restaurant: restaurant_name,
-            user_phone_no,
-            user_email,
-            role: role_name,
+            phone_number,
+            user_email: email,
+            role: role,
             status: is_active ? "Enabled" : "Disabled",
           })
         );
@@ -201,51 +203,51 @@ const Users = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [company_id]);
 
   const confirmStatusChange = useCallback(async () => {
-  if (!selectedUser?.user_id) {
-    toast.error("No user selected for status change.", { position: "top-center" });
-    setConfirmOpen(false);
-    setStatusIndex(null);
-    setSelectedUser(null);
-    return;
-  }
-
-  try {
-    if (confirmType === "delete") {
-      await toast.promise(
-        deleteUser(selectedUser.user_id),
-        {
-          loading: "Deleting user...",
-          success: "User deleted successfully!",
-          error: "Failed to delete user.",
-        }
-      );
-    } else if (confirmType === "reassign") {
-      await toast.promise(
-        updateUser(selectedUser.user_id, { is_active: true }),
-        {
-          loading: "Re-enabling user...",
-          success: "User re-enabled successfully!",
-          error: "Failed to re-enable user.",
-        }
-      );
-    } else {
-      toast.error("Unknown action type.", { position: "top-center" });
+    if (!selectedUser?.user_id) {
+      toast.error("No user selected for status change.", { position: "top-center" });
+      setConfirmOpen(false);
+      setStatusIndex(null);
+      setSelectedUser(null);
       return;
     }
-    // After success
-    setConfirmOpen(false);
-    setStatusIndex(null);
-    setSelectedUser(null);
-    // Refresh user list
-    refetchUsers();
-  } catch (error) {
-    console.error("Error changing user status:", error);
-    toast.error("Failed to update user status.", { position: "top-center" });
-  }
-}, [selectedUser, confirmType, refetchUsers]);
+
+    try {
+      if (confirmType === "delete") {
+        await toast.promise(
+          deleteUser(selectedUser.user_id),
+          {
+            loading: "Deleting user...",
+            success: "User deleted successfully!",
+            error: "Failed to delete user.",
+          }
+        );
+      } else if (confirmType === "reassign") {
+        await toast.promise(
+          updateUser(selectedUser.user_id, { is_active: true }),
+          {
+            loading: "Re-enabling user...",
+            success: "User re-enabled successfully!",
+            error: "Failed to re-enable user.",
+          }
+        );
+      } else {
+        toast.error("Unknown action type.", { position: "top-center" });
+        return;
+      }
+      // After success
+      setConfirmOpen(false);
+      setStatusIndex(null);
+      setSelectedUser(null);
+      // Refresh user list
+      refetchUsers();
+    } catch (error) {
+      console.error("Error changing user status:", error);
+      toast.error("Failed to update user status.", { position: "top-center" });
+    }
+  }, [selectedUser, confirmType, refetchUsers]);
 
 
   // Render helpers
