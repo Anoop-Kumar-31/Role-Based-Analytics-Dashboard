@@ -254,7 +254,7 @@ const Users = () => {
 
   if (isLoading) {
     return (
-      <div className="p-10 text-center text-gray-600">Loading users...</div>
+      <div className="p-10 text-center text-[var(--text-secondary)]">Loading users...</div>
     );
   }
 
@@ -268,7 +268,7 @@ const Users = () => {
 
   if (userList.length === 0) {
     return (
-      <div className="p-10 text-center text-gray-600">No users found.</div>
+      <div className="p-10 text-center text-[var(--text-secondary)]">No users found.</div>
     );
   }
 
@@ -277,9 +277,9 @@ const Users = () => {
       {/* Header */}
       <section className="flex flex-col justify-between items-center w-full gap-4 py-2">
         <div className="flex justify-between items-center w-full max-sm:flex-col max-sm:items-start max-sm:gap-3">
-          <h1 className="text-3xl font-bold text-[var(--primary-black)]">All Users</h1>
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">All Users</h1>
           <button
-            className="button px-5 py-2 rounded-lg bg-[var(--primary-blue)] text-white hover:brightness-90 flex font-semibold items-center"
+            className="px-5 py-2.5 rounded-xl bg-[var(--primary-accent)] text-white hover:bg-[var(--primary-accent-hover)] flex font-medium items-center text-sm transition-all duration-200 hover:shadow-md"
             onClick={openCreatePopup}
             aria-label="Add User"
           >
@@ -289,7 +289,7 @@ const Users = () => {
       </section>
 
       {/* Table */}
-      <section className="py-6 w-full h-fit overflow-y-scroll flex justify-start max-md:px-1">
+      <section className="py-6 w-full h-fit overflow-auto flex justify-start max-md:px-1">
         <Table
           HeadingData={HeadingData}
           bodyData={userList.map(({ user_id, restaurant, ...rest }) => rest)}

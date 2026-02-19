@@ -7,29 +7,44 @@ import {
   FiPlus,
   FiMinus,
 } from "react-icons/fi";
-
-const restaurantOptions = [
-  "Bloom Southern Kitchen",
-  "The Stables Kitchen & Beer Garden",
-  "Olive Tree Café",
-  "Blue River Dine",
-  "Mountain View Eats",
-  "Coastal Breeze Grill",
-  "The Rustic Spoon",
-  "Urban Garden Lounge",
-  "Golden Fork",
-  "Lakeview Terrace Bistro",
-];
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { getRestaurantsByCompanyId } from "../../../services/modules/restaurantService";
 
 const BlueBook = ({ setActivePage }) => {
+  const userData = useSelector((state) => state.auth.user);
+  const company_id = userData?.company_id;
+
+  const [restaurantOptions, setRestaurantOptions] = useState([]);
   const [formData, setFormData] = useState({
-    restaurant: "Olive Tree Café",
+    restaurant: "",
     email: "",
     date: "",
   });
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [filteredRestaurants, setFilteredRestaurants] = useState(restaurantOptions);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      try {
+        const response = await getRestaurantsByCompanyId(company_id);
+        console.log(response)
+        if (response && Array.isArray(response.data)) {
+          const restaurantNames = response.data.map((r) => r.restaurant_name);
+          console.log(restaurantNames)
+          setRestaurantOptions(restaurantNames);
+          setFilteredRestaurants(restaurantNames);
+        } else {
+          throw new Error("Invalid restaurant data format");
+        }
+      } catch (error) {
+        console.error("Failed to fetch restaurants:", error);
+        toast.error("Failed to load restaurant list.");
+      }
+    };
+    if (company_id) fetchRestaurants();
+  }, [company_id]);
   const [isCheckingLogs, setIsCheckingLogs] = useState(false);
   const [isAddingData, setIsAddingData] = useState(false);
   const dropdownRef = useRef(null);
@@ -106,22 +121,22 @@ const BlueBook = ({ setActivePage }) => {
   };
 
   return (
-    <div className="h-[calc(100vh-80px)] overflow-y-auto px-4 py-6 bg-gray-50">
-      <div className="max-w-4xl mx-auto bg-gray-200 px-4 py-2 mb-8 rounded-md">
-        <div className="text-xl font-light text-gray-800 flex items-center space-x-2">
+    <div className="h-[calc(100vh-80px)] overflow-y-auto px-4 py-6 bg-[var(--background)]">
+      <div className="max-w-4xl mx-auto bg-[var(--filler)] px-4 py-2 mb-8 rounded-xl">
+        <div className="text-xl font-light text-[var(--text-primary)] flex items-center space-x-2">
           <span
             onClick={() => setActivePage("Dashboard")}
-            className="text-gray-500 cursor-pointer hover:text-gray-800"
+            className="text-[var(--text-tertiary)] cursor-pointer hover:text-[var(--text-primary)] transition-colors"
           >
             Home
           </span>
-          <FiChevronRight className="text-blue-600 text-xl" />
-          <span className="text-black">Manager’s Blue Book</span>
+          <FiChevronRight className="text-[var(--primary-accent)] text-xl" />
+          <span className="text-[var(--text-primary)]">Manager’s Blue Book</span>
         </div>
       </div>
 
       <div className="flex justify-center px-6">
-        <div className="w-full max-w-4xl bg-white shadow-md rounded-b-xl px-6 py-8">
+        <div className="w-full max-w-4xl bg-white shadow-card rounded-2xl px-6 py-8 border border-[var(--border)]">
           {(isCheckingLogs || isAddingData) && (
             <button
               type="button"
@@ -132,12 +147,12 @@ const BlueBook = ({ setActivePage }) => {
             </button>
           )}
 
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Manager’s Blue Book</h2>
+          <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-4">Manager’s Blue Book</h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {!isAddingData && (
               <div className="relative" ref={dropdownRef}>
-                <label className="block text-md font-semibold text-blue-900 mb-2">
+                <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">
                   What restaurant is this report for? <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
@@ -156,18 +171,35 @@ const BlueBook = ({ setActivePage }) => {
                     }}
                     placeholder="Enter restaurant name"
                     required
-                    className="w-full border border-gray-300 rounded-md px-4 py-4 text-sm focus:ring-2 focus:ring-blue-400 pr-10"
+                    className="w-full outline-none border border-[var(--border)] rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent pr-10 transition-all"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-xl">
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] pointer-events-none text-xl">
                     {dropdownOpen ? <FiChevronUp /> : <FiChevronDown />}
                   </span>
                 </div>
+                {dropdownOpen && (
+                  <ul className="absolute z-10 bg-white w-full border border-[var(--border)] border-t-0 max-h-48 overflow-y-auto rounded-b-xl shadow-lg text-sm mt-1">
+                    {filteredRestaurants.length === 0 ? (
+                      <li className="px-4 py-2 text-[var(--text-tertiary)]">No match found</li>
+                    ) : (
+                      filteredRestaurants.map((option, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleSelectRestaurant(option)}
+                          className="px-4 py-2 hover:bg-[var(--primary-light)] cursor-pointer text-[var(--text-primary)] transition-colors"
+                        >
+                          {option}
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                )}
               </div>
             )}
 
             {isCheckingLogs && !isAddingData && (
               <div>
-                <label className="block text-md font-semibold text-blue-900 mb-2">
+                <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">
                   Date of the report? <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -176,7 +208,7 @@ const BlueBook = ({ setActivePage }) => {
                   value={formData.date}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 rounded-md px-4 py-4 text-sm focus:ring-2 focus:ring-blue-400"
+                  className="w-full border border-[var(--border)] rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
                 />
               </div>
             )}
@@ -184,25 +216,25 @@ const BlueBook = ({ setActivePage }) => {
             {isAddingData && (
               <>
                 <div>
-                  <label className="block font-semibold mb-1">Email *</label>
+                  <label className="block font-medium text-sm mb-1 text-[var(--text-secondary)]">Email *</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3"
+                    className="w-full border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
                     placeholder="danielr@takeflightrg.com"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold mb-1">Weather</label>
+                  <label className="block font-medium text-sm mb-1 text-[var(--text-secondary)]">Weather</label>
                   <input
                     type="text"
                     name="weather"
                     value={formData.weather || ""}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 rounded-md px-4 py-3"
+                    className="w-full border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
                   />
                 </div>
 
@@ -235,11 +267,11 @@ const BlueBook = ({ setActivePage }) => {
                 {dynamicFields.map((field) => (
                   <div key={field} className="mb-6">
                     <div className="flex justify-between items-center mb-2">
-                      <label className="block font-semibold">{field}</label>
+                      <label className="block font-medium text-sm text-[var(--text-primary)]">{field}</label>
                       <button
                         type="button"
                         onClick={() => addNoteField(field)}
-                        className="bg-blue-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center"
+                        className="bg-[var(--primary-accent)] text-white text-sm rounded-full w-6 h-6 flex items-center justify-center hover:bg-[var(--primary-accent-hover)] transition-colors"
                       >
                         <FiPlus />
                       </button>
@@ -250,7 +282,7 @@ const BlueBook = ({ setActivePage }) => {
                           type="text"
                           value={val}
                           onChange={(e) => handleNoteChange(field, idx, e.target.value)}
-                          className="w-full border border-gray-300 rounded-md px-4 py-2"
+                          className="w-full border border-[var(--border)] rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
                         />
                         {idx > 0 && (
                           <button
@@ -270,13 +302,13 @@ const BlueBook = ({ setActivePage }) => {
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="px-6 py-2 bg-white border border-gray-400 rounded-md hover:bg-gray-100 text-gray-700"
+                    className="px-6 py-2.5 bg-white border border-[var(--border)] rounded-xl hover:bg-[var(--filler)] text-[var(--text-secondary)] text-sm font-medium transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-8 py-2 bg-blue-600 text-white rounded-md hover:bg-green-700 transition-colors duration-300"
+                    className="px-8 py-2.5 bg-[var(--primary-accent)] text-white rounded-xl hover:bg-[var(--primary-accent-hover)] text-sm font-medium transition-all duration-200 hover:shadow-md"
                   >
                     Submit
                   </button>
@@ -285,18 +317,18 @@ const BlueBook = ({ setActivePage }) => {
             )}
 
             {!isCheckingLogs && !isAddingData && (
-              <div className="flex justify-center gap-4 pt-4 font-semibold">
+              <div className="flex justify-center gap-4 pt-4 font-medium">
                 <button
                   type="button"
                   onClick={() => setIsCheckingLogs(true)}
-                  className="flex items-center gap-2 px-7 py-2 bg-white text-[var(--primary-blue)] border-2 border-[var(--primary-blue)] rounded-md hover:shadow-md/30"
+                  className="flex items-center gap-2 px-7 py-2.5 bg-white text-[var(--primary-accent)] border-2 border-[var(--primary-accent)] rounded-xl hover:shadow-md text-sm transition-all duration-200"
                 >
                   Check Logs
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsAddingData(true)}
-                  className="px-9 py-2 bg-[var(--primary-blue)] text-white rounded-md hover:bg-emerald-600 hover:shadow-md/20 transition-colors duration-200"
+                  className="px-9 py-2.5 bg-[var(--primary-accent)] text-white rounded-xl hover:bg-[var(--primary-accent-hover)] hover:shadow-md text-sm transition-all duration-200"
                 >
                   Add Today's Data
                 </button>
@@ -307,7 +339,7 @@ const BlueBook = ({ setActivePage }) => {
               <div className="flex justify-center pt-4">
                 <button
                   type="submit"
-                  className="px-9 py-2 bg-[var(--primary-blue)] text-white rounded-md hover:bg-emerald-600 transition-colors duration-300"
+                  className="px-9 py-2.5 bg-[var(--primary-accent)] text-white rounded-xl hover:bg-[var(--primary-accent-hover)] text-sm font-medium transition-all duration-200 hover:shadow-md"
                 >
                   Check
                 </button>
@@ -322,12 +354,12 @@ const BlueBook = ({ setActivePage }) => {
 
 const InputField = ({ name, label, onChange }) => (
   <div>
-    <label className="block text-sm font-semibold mb-1">{label}</label>
+    <label className="block text-sm font-medium mb-1 text-[var(--text-secondary)]">{label}</label>
     <input
       type="number"
       name={name}
       onChange={onChange}
-      className="w-full border border-gray-300 rounded-md px-4 py-2"
+      className="w-full border border-[var(--border)] rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
     />
   </div>
 );

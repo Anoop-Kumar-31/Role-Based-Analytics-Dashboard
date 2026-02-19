@@ -223,7 +223,7 @@ const Expense = () => {
         <>
           {/* Header */}
           <section className="flex justify-between w-full gap-4 py-2 mb-2">
-            <h1 className="text-3xl font-bold text-[var(--primary-black)]">Expense</h1>
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">Expense</h1>
             {/* <button
               className="bg-[var(--primary-blue)] text-white  px-4 py-2 rounded-lg font-semibold hover:brightness-95 hover:shadow-md/30"
               onClick={() => {
@@ -240,30 +240,30 @@ const Expense = () => {
           {/* Search + Actions */}
           <div className="flex flex-wrap justify-between items-center mb-4 w-full">
             <div className="flex items-center flex-grow max-w-md">
-              <div className="flex items-center bg-white px-3 py-2 rounded-l-lg border border-gray-300 border-r-0 w-full">
-                <FiSearch className="text-gray-500 mr-2" />
+              <div className="flex items-center bg-white px-3 py-2.5 rounded-l-xl border border-[var(--border)] border-r-0 w-full">
+                <FiSearch className="text-[var(--text-tertiary)] mr-2" />
                 <input
                   type="text"
                   placeholder="Search"
-                  className="bg-transparent outline-none w-full text-sm"
+                  className="bg-transparent outline-none w-full text-sm text-[var(--text-primary)]"
                 />
               </div>
-              <button className="flex items-center gap-1 px-3 py-2 bg-gray-200 border border-gray-300 rounded-r-lg text-sm text-gray-700 hover:bg-gray-300">
+              <button className="flex items-center gap-1 px-3 py-2.5 bg-[var(--filler)] border border-[var(--border)] rounded-r-xl text-sm text-[var(--text-secondary)] hover:bg-[var(--border)] transition-colors">
                 Filter
-                <FiFilter className="text-gray-600" />
+                <FiFilter className="text-[var(--text-tertiary)]" />
               </button>
             </div>
 
             <div className="flex gap-3 flex-wrap mt-2 md:mt-0">
               <button
-                className="bg-[#058877] text-white px-4 py-2 rounded-lg flex items-center transition-all duration-200 hover:bg-[#047c6e] hover:shadow-md/30"
+                className="bg-[var(--primary-accent)] text-white px-4 py-2.5 rounded-xl flex items-center text-sm font-medium transition-all duration-200 hover:bg-[var(--primary-accent-hover)] hover:shadow-md"
                 onClick={handleDownload}
               >
                 <FiDownload className="mr-2" />
                 Download XLS
               </button>
 
-              <button className="bg-[#058877] text-white px-4 py-2 rounded-lg flex items-center transition-all duration-200 hover:bg-[#047c6e] hover:shadow-md/30">
+              <button className="bg-[var(--primary-accent)] text-white px-4 py-2.5 rounded-xl flex items-center text-sm font-medium transition-all duration-200 hover:bg-[var(--primary-accent-hover)] hover:shadow-md">
                 <FiRefreshCw className="mr-2" />
                 Sync All
               </button>

@@ -7,7 +7,7 @@ import { persistor } from "../store/index.js"; // Adjust path
 
 
 const DropdownMenu = ({ setActivePage, closeDropdown, setPopup, setIsLoggedIn }) => {
-  
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -26,14 +26,15 @@ const DropdownMenu = ({ setActivePage, closeDropdown, setPopup, setIsLoggedIn })
   return (
     <div
       className="
-        absolute top-full right-0 mt-[5px] bg-white text-[var(--primary-black)]
-        shadow-[0_2px_8px_#00000033] rounded-[8px] w-full z-10
+        absolute top-full right-0 mt-2 bg-white text-[var(--text-primary)]
+        shadow-elevated rounded-xl w-full z-10 overflow-hidden animate-slideDown
+        border border-[var(--border)]
       "
     >
       <div
         className="
-          px-5 py-2 cursor-pointer border-b border-[#eaeaea]
-          transition-all duration-200 hover:bg-[var(--filler)]
+          px-4 py-2.5 cursor-pointer border-b border-[var(--border)]
+          transition-all duration-200 hover:bg-[var(--filler)] text-sm font-medium
         "
         onClick={() => {
           setActivePage('My Profile');
@@ -45,8 +46,8 @@ const DropdownMenu = ({ setActivePage, closeDropdown, setPopup, setIsLoggedIn })
       </div>
       <div
         className="
-          px-5 py-2 cursor-pointer border-b border-[#eaeaea]
-          transition-all duration-200 hover:bg-[var(--filler)]
+          px-4 py-2.5 cursor-pointer border-b border-[var(--border)]
+          transition-all duration-200 hover:bg-[var(--filler)] text-sm font-medium
         "
         onClick={() => {
           setPopup(true);
@@ -57,7 +58,7 @@ const DropdownMenu = ({ setActivePage, closeDropdown, setPopup, setIsLoggedIn })
       </div>
       <div
         className="
-          px-5 py-2 cursor-pointer transition-all duration-200 hover:bg-[var(--filler)]
+          px-4 py-2.5 cursor-pointer transition-all duration-200 hover:bg-red-50 text-sm font-medium text-red-600
         "
         onClick={handleLogOut}
       >

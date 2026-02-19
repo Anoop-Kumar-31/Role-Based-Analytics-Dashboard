@@ -4,19 +4,27 @@ body{
     background-color: var(--background);
 }
 
+::selection {
+    background: rgba(16,185,129,0.15);
+    color: var(--text-primary);
+}
+
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
     background: transparent;
-    border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb {
-    background: var(--primary-blue);
-    border-radius: 10px;
+    background: linear-gradient(180deg, var(--primary-accent), var(--secondary-accent));
+    border-radius: 99px;
+}
+::-webkit-scrollbar-track {
+    background: var(--filler);
+    border-radius: 99px;
 }
 @media screen and (max-width: 768px) {
     ::-webkit-scrollbar {
-        width: 5px;
-        height: 5px;
+        width: 4px;
+        height: 4px;
     }
 }

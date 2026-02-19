@@ -133,7 +133,7 @@ const PopUp = ({ onClose, data }) => {
     <UserReviewForm key="user-review" form={form} />
   ];
 
-  const handleSubmit=(props)=>{
+  const handleSubmit = (props) => {
     console.log(props);
     // Call API to save data
     // Refresh the page
@@ -153,8 +153,8 @@ const PopUp = ({ onClose, data }) => {
     } else {
       const { fname, lname, email, phone, restaurant } = form;
       alert("User info has been saved successfully!");
-      const fullName=fname+' '+lname
-      handleSubmit({fullName, email, phone, restaurant});
+      const fullName = fname + ' ' + lname
+      handleSubmit({ fullName, email, phone, restaurant });
       onClose();
     }
   };
@@ -166,7 +166,7 @@ const PopUp = ({ onClose, data }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-white backdrop-blur-xs flex items-center justify-center z-999999999">
+    <div className="fixed inset-0 h-[calc(100vh-60px)] bg-white backdrop-blur-xs flex items-center justify-center z-50">
       <div className="bg-white w-[60%] h-[100%] p-8 flex flex-col justify-between
                       max-md:w-full max-md:h-full max-md:p-2 max-md:rounded-none">
         <section className="h-fill mb-8 h-[90%] px-3 overflow-y-scroll max-md:px-1 max-md:mb-4">

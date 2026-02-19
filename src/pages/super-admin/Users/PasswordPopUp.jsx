@@ -64,13 +64,13 @@ const UserInfoForm = ({ form, setForm }) => {
 };
 
 const PopUp = ({ onClose, data }) => {
-  
+
   console.log(data)
 
   const [form, setForm] = useState({
-      newPassword: "",
-      confirmPassword: "",
-    });
+    newPassword: "",
+    confirmPassword: "",
+  });
   const [page, setPage] = useState(0);
 
   const pages = [
@@ -81,25 +81,25 @@ const PopUp = ({ onClose, data }) => {
   const handleSubmit = async () => {
     if (page === 0) {
       const { confirmPassword, newPassword } = form;
-      if ( confirmPassword !== newPassword) {
-        toast.error("Passwords do not match!",{ position: "top-center", duration: 2000 });
+      if (confirmPassword !== newPassword) {
+        toast.error("Passwords do not match!", { position: "top-center", duration: 2000 });
       }
-      else if (confirmPassword.length == 0 && newPassword.length == 0){
-        toast.error("Please fill in all fields!",{ position: "top-center", duration: 2000 });
+      else if (confirmPassword.length == 0 && newPassword.length == 0) {
+        toast.error("Please fill in all fields!", { position: "top-center", duration: 2000 });
       }
       else if (newPassword.length < 8) {
-        toast.error("Password must be at least 8 characters long!",{ position: "top-center", duration: 2000 });
+        toast.error("Password must be at least 8 characters long!", { position: "top-center", duration: 2000 });
       }
       else {
-        try{
-          const response = await updateUser(data.user_id,{password: newPassword})
-          if (response){
+        try {
+          const response = await updateUser(data.user_id, { password: newPassword })
+          if (response) {
             console.log(response);
           }
-        }catch (error){
+        } catch (error) {
           console.error(error);
         }
-        toast.success("Password changed successfully!",{ position: "top-center", duration: 2000 });
+        toast.success("Password changed successfully!", { position: "top-center", duration: 2000 });
         onClose();
       }
     }
@@ -112,7 +112,7 @@ const PopUp = ({ onClose, data }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#00000033] backdrop-blur-xs flex items-center justify-center z-999999999">
+    <div className="fixed inset-0 h-[calc(100vh-60px)] bg-[#00000033] backdrop-blur-xs flex items-center justify-center z-50">
       <div className="bg-white w-[40%] h-fit p-8 flex flex-col justify-between
                       max-md:w-full max-md:h-full max-md:p-2 max-md:rounded-none rounded-2xl">
         <section className="h-fill mb-8 h-[90%] px-3 overflow-y-scroll max-md:px-1 max-md:mb-4">
@@ -121,7 +121,7 @@ const PopUp = ({ onClose, data }) => {
         <section className="flex justify-center gap-3 max-md:gap-2 max-md:flex-col-reverse">
           <button
             className="px-5 py-2 rounded-lg bg-white hover:bg-[#ffaaaa] border-2 border-red-900 text-red-900 max-md:w-full"
-            onClick={()=>{
+            onClick={() => {
               setForm({
                 fname: "",
                 lname: "",

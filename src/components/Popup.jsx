@@ -43,54 +43,55 @@ const Popup = ({ onClose, onSubmit }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#00000033] bg-opacity-80 flex items-center justify-center z-[999999999] backdrop-blur-xs">
+    <div className="fixed inset-0 h-[calc(100vh-60px)] bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
       <form
-        className="bg-white rounded-xl shadow-lg w-[clamp(100px,38%,600px)] p-8 flex flex-col gap-6 relative justify-center items-center"
+        className="bg-white rounded-2xl shadow-elevated w-[clamp(100px,38%,600px)] flex flex-col gap-5 relative justify-center items-center overflow-hidden animate-slideUp"
         onSubmit={handleSubmit}
       >
+        <div className="h-1 w-full bg-gradient-to-r from-[var(--primary-accent)] to-[var(--secondary-accent)]" />
         <button
           type="button"
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700"
+          className="absolute top-5 right-4 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors p-1 rounded-lg hover:bg-[var(--filler)]"
           onClick={onClose}
         >
-          <X size={24} />
+          <X size={20} />
         </button>
-        <h2 className="text-2xl font-bold mb-2 text-[var(--primary-black)]">Change Password</h2>
-        <div className="flex flex-col gap-4 w-fill">
+        <h2 className="text-xl font-bold text-[var(--text-primary)] px-8 pt-4">Change Password</h2>
+        <div className="flex flex-col gap-4 w-full px-8">
           <div>
-            <label className="block font-semibold mb-1 text-[var(--main-blue)]">
-              Old Password <span className="text-red-600">*</span>
+            <label className="block font-medium mb-1.5 text-[var(--text-secondary)] text-sm">
+              Old Password <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-[var(--border)] rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
               placeholder="Enter old password"
             />
           </div>
           <div>
-            <label className="block font-semibold mb-1 text-[var(--main-blue)]">
-              New Password <span className="text-red-600">*</span>
+            <label className="block font-medium mb-1.5 text-[var(--text-secondary)] text-sm">
+              New Password <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-[var(--border)] rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Enter new password"
             />
-            <div className="text-[13px] text-red-800 mt-1">
+            <div className="text-xs text-[var(--text-tertiary)] mt-1.5">
               Enter a combination of at least five numbers, letters and punctuation marks (like ! and &).
             </div>
           </div>
           <div>
-            <label className="block font-semibold mb-1 text-[var(--main-blue)]">
-              Confirm Password <span className="text-red-600">*</span>
+            <label className="block font-medium mb-1.5 text-[var(--text-secondary)] text-sm">
+              Confirm Password <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-[var(--border)] rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm new password"
@@ -102,7 +103,7 @@ const Popup = ({ onClose, onSubmit }) => {
         </div>
         <button
           type="submit"
-          className="bg-[var(--primary-blue)] hover:brightness-90 text-white font-semibold rounded-lg px-6 py-2 mt-2 transition-colors w-fit"
+          className="bg-[var(--primary-accent)] hover:bg-[var(--primary-accent-hover)] text-white font-semibold rounded-xl px-6 py-2.5 mb-6 transition-colors w-fit text-sm shadow-sm hover:shadow-md"
         >
           Update Password
         </button>

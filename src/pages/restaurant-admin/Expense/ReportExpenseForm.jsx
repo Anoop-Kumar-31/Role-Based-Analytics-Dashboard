@@ -50,7 +50,8 @@ const addFormData = (data, formData, setFormData, setAmounts) => {
   return formData;
 };
 
-const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
+const ReportExpenseForm = ({ onClose, data, type = "create" }) => {
+  console.log(data);
   const userData = useSelector((state) => state.auth.user);
   const [formData, setFormData] = useState({
     submission_date: data.created_at,
@@ -266,6 +267,7 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
       for (let [key, value] of formPayload.entries()) {
         console.log(key, value);
       }
+      console.log(formPayload);
 
       toast.promise(
         createExpense(formPayload, { headers: { "Content-Type": "multipart/form-data" } }),
@@ -288,6 +290,7 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
 
     } else {
       toast.promise(
+        console.log(formPayload),
         updateExpense(data.expense_id, formPayload, { headers: { "Content-Type": "multipart/form-data" } }),
         {
           loading: "Updating expense...",

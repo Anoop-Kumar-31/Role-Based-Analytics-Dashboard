@@ -291,7 +291,7 @@ const PopUp = ({ onClose, data, formType = "edit" }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#00000033] backdrop-blur-xs flex items-center justify-center z-3">
+    <div className="fixed inset-0 h-[calc(100vh-60px)] bg-[#00000033] backdrop-blur-xs flex items-center justify-center z-50">
       <div className="bg-white w-[50%] h-fit p-8 flex flex-col justify-between
                       max-md:w-full max-md:h-full max-md:p-2 max-md:rounded-none rounded-2xl">
         <section className="h-fill mb-8 h-[90%] px-3 overflow-y-scroll max-md:px-1 max-md:mb-4">

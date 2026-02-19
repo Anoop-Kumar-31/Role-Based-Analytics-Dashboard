@@ -52,30 +52,30 @@ const RestaurantDropdown = ({ options, selected, setSelected, onSubmit }) => {
 
   return (
     <div
-      className="flex w-full mx-auto text-[var(--primary-black)] h-fit gap-[15px] relative max-md:flex-col"
+      className="flex w-full mx-auto text-[var(--text-primary)] h-fit gap-3 relative max-md:flex-col"
       ref={dropdownRef}
     >
       <div
-        className="border border-[#ccc] rounded-[10px] px-[15px] pl-[25px] py-2 cursor-pointer bg-white w-full flex items-center justify-between shadow-[0_2px_3px_#00000033] select-none text-ellipsis relative max-md:w-full"
+        className="border border-[var(--border)] rounded-xl px-4 py-2.5 cursor-pointer bg-white w-full flex items-center justify-between shadow-card select-none text-ellipsis relative max-md:w-full transition-all duration-200 hover:border-[var(--primary-accent)] focus-within:ring-2 focus-within:ring-[var(--primary-accent)]/20"
         type="button"
         onClick={handleDropdownClick}
         aria-haspopup="listbox"
         aria-expanded={showDropdown}
       >
-        <span className="block overflow-hidden text-ellipsis whitespace-nowrap w-[90%]">
+        <span className="block overflow-hidden text-ellipsis whitespace-nowrap w-[90%] text-sm">
           {renderSelectedText()}
         </span>
-        {showDropdown ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+        <ChevronDown size={18} className={`transition-transform duration-200 text-[var(--text-tertiary)] ${showDropdown ? 'rotate-180' : ''}`} />
       </div>
       {showDropdown && (
         <div
-          className="absolute flex flex-col translate-y-[45px] left-0 w-[calc(100%-120px)] border border-[#ccc] rounded-[10px] bg-white shadow-[0_1px_2px_#00000033] py-2 max-h-[clamp(200px,40vh,400px)] overflow-y-scroll max-md:w-full"
+          className="absolute flex flex-col translate-y-[45px] left-0 w-[calc(100%-120px)] border border-[var(--border)] rounded-xl bg-white shadow-elevated py-2 max-h-[clamp(200px,40vh,400px)] overflow-y-auto max-md:w-full animate-slideDown z-20"
           role="listbox"
         >
           {options.map((option) => (
             <label
               key={option}
-              className="flex items-center px-3 py-1 cursor-pointer transition-colors duration-200 hover:bg-[#f5f5f5]"
+              className="flex items-center px-3.5 py-2 cursor-pointer transition-colors duration-150 hover:bg-[var(--filler)] text-sm"
               role="option"
               aria-selected={selected.includes(option)}
             >
@@ -83,15 +83,15 @@ const RestaurantDropdown = ({ options, selected, setSelected, onSubmit }) => {
                 type="checkbox"
                 checked={selected.includes(option)}
                 onChange={() => handleCheckboxChange(option)}
-                className="mr-2"
+                className="mr-2.5 accent-[var(--primary-accent)] w-4 h-4"
               />
-              <span className="text-base">{option}</span>
+              <span className="text-sm text-[var(--text-primary)]">{option}</span>
             </label>
           ))}
         </div>
       )}
       <button
-        className="bg-[var(--primary-blue)] text-white border-none px-[25px] rounded-[10px] cursor-pointer flex items-center justify-center gap-[5px] w-[115px] font-medium text-[medium] transition hover:brightness-90 p-2 max-md:w-full"
+        className="bg-[var(--primary-accent)] text-white border-none px-6 rounded-xl cursor-pointer flex items-center justify-center gap-1.5 w-[115px] font-medium text-sm transition-all duration-200 hover:bg-[var(--primary-accent-hover)] hover:shadow-md py-2.5 max-md:w-full disabled:opacity-50 disabled:cursor-not-allowed"
         type="button"
         onClick={onSubmit}
         disabled={selected.length === 0}
@@ -103,7 +103,7 @@ const RestaurantDropdown = ({ options, selected, setSelected, onSubmit }) => {
 };
 
 RestaurantDropdown.defaultProps = {
-  onSubmit: () => {},
+  onSubmit: () => { },
 };
 
 export default RestaurantDropdown;

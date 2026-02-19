@@ -13,7 +13,7 @@ import avt11 from "../../../assets/images/avatars/15.png";
 import avt12 from "../../../assets/images/avatars/16.png";
 
 // Example avatar images (replace with your own paths)
-const avatarList = [ avt1, avt2, avt3, avt4, avt5, avt6, avt7, avt8, avt10, avt11, avt12 ];
+const avatarList = [avt1, avt2, avt3, avt4, avt5, avt6, avt7, avt8, avt10, avt11, avt12];
 
 const PopUp = ({ onClose, onSelect }) => {
   const [selected, setSelected] = useState(null);
@@ -51,7 +51,7 @@ const PopUp = ({ onClose, onSelect }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#00000033] bg-opacity-80 flex items-center justify-center z-[999999999] backdrop-blur-xs">
+    <div className="fixed inset-0 h-[calc(100vh-60px)] bg-[#00000033] bg-opacity-80 flex items-center justify-center z-50 backdrop-blur-xs">
       <div className="bg-white md:rounded-xl shadow-lg w-full max-w-2xl p-8 flex flex-col gap-6 relative max-md:h-full justify-between">
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-700"
@@ -82,9 +82,9 @@ const PopUp = ({ onClose, onSelect }) => {
             />
           ) : (
             <span className="text-[var(--primary-blue)] flex flex-col items-center gap-0">
-              <span className="text-gray-400 text-center">Drag and Drop<br/>or</span>
+              <span className="text-gray-400 text-center">Drag and Drop<br />or</span>
               <span className="flex">Click to upload &nbsp;<Upload size={20} /></span>
-              
+
             </span>
           )}
         </div>
@@ -96,11 +96,10 @@ const PopUp = ({ onClose, onSelect }) => {
               <button
                 key={idx}
                 type="button"
-                className={`rounded-full border-2 transition-all duration-150 aspect-square h-[85px] border-transparent ${
-                  selected === idx
-                    ? "shadow-[0_0_0_2px_var(--primary-blue)]"
-                    : ""
-                }`}
+                className={`rounded-full border-2 transition-all duration-150 aspect-square h-[85px] border-transparent ${selected === idx
+                  ? "shadow-[0_0_0_2px_var(--primary-blue)]"
+                  : ""
+                  }`}
                 onClick={() => handleAvatarClick(img, idx)}
                 tabIndex={0}
               >

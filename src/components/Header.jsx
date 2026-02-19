@@ -28,22 +28,22 @@ const Header = ({ setActivePage, setPopup, setIsLoggedIn }) => {
   }, [isClicked]);
 
   return (
-    <main className="sticky top-0 px-[clamp(50px,50%,150px)] py-[5px] border-[var(--light-grey)] border-b-2 h-[50px] select-none bg-white max-md:px-0 w-[100%] z-[2]">
-      <section className="w-full flex justify-end items-center bg-white">
+    <main className="sticky top-0 px-6 py-2 h-[60px] select-none bg-white/80 backdrop-blur-xl border-b border-[var(--border)] z-[2] flex items-center max-md:px-3 w-full">
+      <section className="w-full flex justify-end items-center">
         <div
           ref={dropdownRef}
           onClick={() => setIsClicked(!isClicked)}
-          className="flex items-center justify-center gap-[10px] bg-white px-[10px] transition-all duration-200 ease-in-out relative cursor-pointer"
+          className="flex items-center gap-3 py-1.5 px-2 rounded-xl hover:bg-[var(--filler)] transition-all duration-200 relative cursor-pointer"
         >
-          <div className="w-[45px] h-[40px] bg-[#f0f0f0] rounded-full flex items-center justify-center">
-            <img src={pfp} alt="pfp" className="w-full h-full rounded-full object-cover" />
+          <div className="w-[38px] h-[38px] rounded-full p-[2px] bg-gradient-to-br from-[var(--primary-accent)] to-[var(--secondary-accent)] flex items-center justify-center">
+            <img src={pfp} alt="pfp" className="w-full h-full rounded-full object-cover border-2 border-white" />
           </div>
-          <div className="flex flex-col gap-1 ">
-            <h3 className="text-[var(--main-blue)] font-semibold text-[medium] leading-none">{user?.first_name + " " + user?.last_name}</h3>
-            <p className="text-[var(--primary-grey)] font-light text-[smaller] leading-none">{user?.email}</p>
+          <div className="flex flex-col gap-0.5 max-md:hidden">
+            <h3 className="text-[var(--text-primary)] font-semibold text-sm leading-none">{user?.first_name + " " + user?.last_name}</h3>
+            <p className="text-[var(--text-tertiary)] font-normal text-xs leading-none">{user?.email}</p>
           </div>
-          <div className="translate-y-[5px] h-fit mb-2">
-            {isClicked?<ChevronUp/>:<ChevronDown />}
+          <div className={`transition-transform duration-200 text-[var(--text-tertiary)] ${isClicked ? 'rotate-180' : ''}`}>
+            <ChevronDown size={18} />
           </div>
           {isClicked && (
             <DropdownMenu setActivePage={setActivePage} closeDropdown={() => setIsClicked(false)} setPopup={setPopup} setIsLoggedIn={setIsLoggedIn} />

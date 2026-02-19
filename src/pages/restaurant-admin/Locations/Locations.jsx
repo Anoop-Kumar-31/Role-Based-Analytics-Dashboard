@@ -92,16 +92,16 @@ const Locations = () => {
       ) : (
         <>
           {/* Top Section */}
-          <section className="flex flex-col justify-between bg-[var(--background)] items-center w-full gap-[15px]  py-2">
-            <div className="flex flex-row justify-between  items-center w-[100%]">
-              <h1 className="text-3xl font-bold text-[var(--primary-black)] self-center">
+          <section className="flex flex-col justify-between bg-[var(--background)] items-center w-full gap-4 py-2">
+            <div className="flex flex-row justify-between items-center w-full">
+              <h1 className="text-2xl font-bold text-[var(--text-primary)] self-center">
                 Restaurants&apos; Location
               </h1>
             </div>
           </section>
 
           {/* Table Section */}
-          <section className=" py-[30px] pb-[120px] w-[100%] overflow-scroll flex justify-start max-md:px-1">
+          <section className="py-[30px] pb-[120px] w-full overflow-auto flex justify-start max-md:px-1">
             <Table
               HeadingData={HeadingData}
               bodyData={Array.isArray(restaurants) ? restaurants : []}

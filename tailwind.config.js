@@ -7,17 +7,25 @@ export default {
   theme: {
     extend: {
       colors: {
-        'main-blue': '#104967',           // Use as: bg-main-blue, text-main-blue
-        'primary-blue': '#4C68F4',        // Use as: bg-primary-blue, text-primary-blue
-        'secondary-blue': '#3245a7',      // Use as: bg-secondary-blue, text-secondary-blue
-        'primary-grey': '#54585a',        // Use as: bg-primary-grey, text-primary-grey
-        'background': '#f5f5f5',          // Use as: bg-background
-        'primary-black': '#1E1E1E',       // Use as: text-primary-black, bg-primary-black
-        'secondary-black': '#1E1E1E',     // Use as: text-secondary-black, bg-secondary-black
-        'filler': '#F1F1F1',              // Use as: bg-filler
-        'light-grey': '#E1E1E1',          // Use as: text-light-grey, bg-light-grey
+        'main-blue': '#104967',
+        'primary-blue': '#10B981',
+        'secondary-blue': '#059669',
+        'primary-grey': '#64748B',
+        'background': '#F0F4F8',
+        'primary-black': '#0F172A',
+        'secondary-black': '#1E293B',
+        'filler': '#F1F5F9',
+        'light-grey': '#E2E8F0',
       },
-      // You can also extend other theme properties here if needed
+      boxShadow: {
+        'card': '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)',
+        'card-hover': '0 4px 12px rgba(0,0,0,0.08)',
+        'elevated': '0 10px 40px rgba(0,0,0,0.08)',
+      },
+      borderRadius: {
+        'xl': '12px',
+        '2xl': '16px',
+      },
     },
   },
   plugins: [],

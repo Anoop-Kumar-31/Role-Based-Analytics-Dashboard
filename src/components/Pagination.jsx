@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./Pagination.css";
 import { useEffect } from "react";
 
-const Pagination = ({ currentPage,setCurrentPage,restaurants, totalPages, onPageChange, setMaxRows, maxRows }) => {
+const Pagination = ({ currentPage, setCurrentPage, restaurants, totalPages, onPageChange, setMaxRows, maxRows }) => {
   // Generate pagination numbers (with ellipsis if needed)
   const getPagination = () => {
     const pages = [];
@@ -29,7 +29,7 @@ const Pagination = ({ currentPage,setCurrentPage,restaurants, totalPages, onPage
     // Remove consecutive duplicates (for safety)
     return pages.filter((v, i, a) => i === 0 || v !== a[i - 1]);
   };
- 
+
   useEffect(() => {
     if (restaurants && Array.isArray(restaurants)) {
       const newTotalPages = Math.ceil(restaurants.length / maxRows);
@@ -57,9 +57,8 @@ const Pagination = ({ currentPage,setCurrentPage,restaurants, totalPages, onPage
           ) : (
             <button
               key={`page-${page}-${idx}`}
-              className={`pagination-btn${
-                currentPage === page ? " active" : ""
-              }`}
+              className={`pagination-btn${currentPage === page ? " active" : ""
+                }`}
               onClick={() => onPageChange(page)}
             >
               {page}

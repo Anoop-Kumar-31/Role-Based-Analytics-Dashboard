@@ -198,9 +198,9 @@ const Revenue = () => {
           {/* Header */}
           <section className="flex flex-col justify-between w-full gap-4 py-2">
             <div className="flex justify-between items-center w-full flex-wrap gap-4">
-              <h1 className="text-3xl font-bold text-[var(--primary-black)]">Revenue</h1>
+              <h1 className="text-2xl font-bold text-[var(--text-primary)]">Revenue</h1>
               <button
-                className="button px-5 py-2 rounded-lg bg-[var(--primary-blue)] text-white hover:brightness-95 flex font-semibold items-center hover:shadow-md/30"
+                className="px-5 py-2.5 rounded-xl bg-[var(--primary-accent)] text-white hover:bg-[var(--primary-accent-hover)] flex font-medium items-center text-sm transition-all duration-200 hover:shadow-md"
                 onClick={handleReportRevenueClick}
               >
                 Report Revenue
@@ -209,17 +209,17 @@ const Revenue = () => {
             {/* Search Bar and Filter */}
             <div className="flex flex-wrap justify-between items-center mb-4">
               <div className="flex items-center flex-grow max-w-md">
-                <div className="flex items-center bg-white px-3 py-2 rounded-l-lg border border-gray-300 border-r-0 w-full">
-                  <FiSearch className="text-gray-500 mr-2" />
+                <div className="flex items-center bg-white px-3 py-2.5 rounded-l-xl border border-[var(--border)] border-r-0 w-full">
+                  <FiSearch className="text-[var(--text-tertiary)] mr-2" />
                   <input
                     type="text"
                     placeholder="Search"
-                    className="bg-transparent outline-none w-full text-sm"
+                    className="bg-transparent outline-none w-full text-sm text-[var(--text-primary)]"
                   />
                 </div>
-                <button className="flex items-center gap-1 px-3 py-2 bg-gray-200 border border-gray-300 rounded-r-lg text-sm text-gray-700 hover:bg-gray-300">
+                <button className="flex items-center gap-1 px-3 py-2.5 bg-[var(--filler)] border border-[var(--border)] rounded-r-xl text-sm text-[var(--text-secondary)] hover:bg-[var(--border)] transition-colors">
                   Filter
-                  <FiFilter className="text-gray-600" />
+                  <FiFilter className="text-[var(--text-tertiary)]" />
                 </button>
               </div>
             </div>

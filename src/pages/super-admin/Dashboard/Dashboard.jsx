@@ -130,12 +130,12 @@ const Dashboard = () => {
   }, [validateDates]);
 
   return (
-    <div className="flex flex-col items-center bg-[var(--background)] overflow-scroll max-md:p-3">
+    <div className="flex flex-col items-center bg-[var(--background)] overflow-auto max-md:p-3">
       {/* Top Section */}
-      <section className="flex flex-col justify-between bg-[var(--background)] items-center w-full gap-[15px] p-5 pt-7 max-md:p-0">
-        <div className="flex flex-col justify-between gap-[15px] items-start w-[100%]">
-          <h1 className="text-3xl font-bold text-[var(--primary-black)]  ">Dashboard</h1>
-          <div className="flex w-[clamp(200px,50%,600px)] text-[var(--primary-black)] h-fit max-md:w-full">
+      <section className="flex flex-col justify-between bg-[var(--background)] items-center w-full gap-4 p-5 pt-5 max-md:p-0">
+        <div className="flex flex-col justify-between gap-4 items-start w-full">
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Dashboard</h1>
+          <div className="flex w-[clamp(200px,50%,600px)] text-[var(--text-primary)] h-fit max-md:w-full">
             <RestaurantDropdown
               options={restaurants}
               selected={selected}
@@ -148,7 +148,7 @@ const Dashboard = () => {
       </section>
 
       {/* Bottom Section */}
-      <section className="flex-grow flex flex-col items-center w-[100%] p-5 py-0 gap-6 max-md:p-0">
+      <section className="flex-grow flex flex-col items-center w-full p-5 py-0 gap-5 max-md:p-0">
         {/* Filter Container */}
         {/* <div className="flex flex-col w-full bg-white shadow-[0_2px_3px_#00000033] rounded-[10px] py-2">
           <section>

@@ -64,7 +64,7 @@ const PopUp = ({ onClose, onSelect }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-[#00000033] bg-opacity-80 flex items-center justify-center z-[999999999] backdrop-blur-xs">
+    <div className="fixed inset-0 h-[calc(100vh-60px)] bg-[#00000033] bg-opacity-80 flex items-center justify-center z-50 backdrop-blur-xs">
       <div className="bg-white md:rounded-xl shadow-lg w-full max-w-2xl p-8 flex flex-col gap-6 relative max-md:h-full justify-between">
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-700"
@@ -110,15 +110,14 @@ const PopUp = ({ onClose, onSelect }) => {
         {/* Avatars */}
         <div className="bg-white rounded-lg pt-4 border-2 border-[var(--primary-blue)] flex flex-col">
           <div className="text-center font-semibold mb-1 text-2xl">Avatars</div>
-          <hr className="w-[90%] self-center pb-2 border-[var(--primary-blue)] border-t-2"/>
+          <hr className="w-[90%] self-center pb-2 border-[var(--primary-blue)] border-t-2" />
           <div className="grid grid-rows-2 grid-flow-col gap-4 w-fill overflow-x-scroll p-2">
             {avatarList.map((img, idx) => (
               <button
                 key={idx}
                 type="button"
-                className={`rounded-full border-2 transition-all duration-150 aspect-square h-[85px] border-transparent ${
-                  selected === idx ? "shadow-[0_0_0_2px_var(--primary-blue)]" : ""
-                }`}
+                className={`rounded-full border-2 transition-all duration-150 aspect-square h-[85px] border-transparent ${selected === idx ? "shadow-[0_0_0_2px_var(--primary-blue)]" : ""
+                  }`}
                 onClick={() => handleAvatarClick(img, idx)}
                 tabIndex={0}
                 aria-label={`Select Avatar ${idx + 1}`}

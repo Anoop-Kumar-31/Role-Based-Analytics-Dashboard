@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 import StepThree from "./StepThree";
-import logo from "../../assets/images/logo.png";
 import { X } from "lucide-react";
 import { onboarding } from "../../services/modules/authService";
 
@@ -136,59 +135,59 @@ const OnboardingQuestionnaire = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[1000001] bg-blue-100 flex flex-col items-center overflow-y-auto py-10">
-      {/*  Logo  */}
-      <img
-        src={logo}
-        alt="App Logo"
-        className="h-25 text-semibold mb-1 object-contain max-md:w-[60%] max-md:mb-5"
-      />
-
+    <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm flex justify-center items-start pt-10 overflow-y-auto">
       {/*  form box  */}
-      <div className="bg-white w-[clamp(350px,60%,800px)] p-6 rounded-xl shadow-lg relative">
+      <div className="bg-white w-[600px] max-w-[95%] rounded-2xl shadow-elevated relative animate-slideUp overflow-hidden mb-10">
 
-        {/* Close Button */}
-        <div className="text-end mb-4 absolute top-4 right-4">
+        {/* Header with gradient */}
+        <div className="bg-gradient-to-r from-[#0F172A] to-[#1E293B] text-white px-6 py-4 flex justify-between items-center sticky top-0 z-10">
+          <div className="flex items-center gap-3">
+            {/* Optional: Small Logo if needed, or just text */}
+            <h2 className="text-lg font-semibold">Onboarding</h2>
+          </div>
           <button
             onClick={() => onClose()}
-            className="text-3xl text-gray-500 hover:text-gray-800"
+            className="text-white/60 hover:text-white transition-colors bg-white/10 hover:bg-white/20 p-1.5 rounded-lg"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
 
-        {/* Step content */}
-        {step === 1 && (
-          <StepOne
-            nextStep={nextStep}
-            step={step}
-            title={stepTitles[step]}
-            user={user}
-            setUser={setUser}
-          />
-        )}
-        {step === 2 && (
-          <StepTwo
-            nextStep={nextStep}
-            prevStep={prevStep}
-            step={step}
-            title={stepTitles[step]}
-            company={company}
-            setCompany={setCompany}
-            currentRestaurantIndex={currentRestaurantIndex}
-            setCurrentRestaurantIndex={setCurrentRestaurantIndex}
-          />
-        )}
-        {step === 3 && (
-          <StepThree
-            prevStep={prevStep}
-            step={step}
-            title={stepTitles[step]}
-            toast={toastData}
-            setToastData={setToastData}
-            onSubmit={() => handleSubmit()}
-          />
-        )}
+        {/* Scrollable Content */}
+        <div className="p-0"> {/* Padding moved to steps or kept minimal here */}
+          {/* Step content */}
+          {step === 1 && (
+            <StepOne
+              nextStep={nextStep}
+              step={step}
+              title={stepTitles[step]}
+              user={user}
+              setUser={setUser}
+            />
+          )}
+          {step === 2 && (
+            <StepTwo
+              nextStep={nextStep}
+              prevStep={prevStep}
+              step={step}
+              title={stepTitles[step]}
+              company={company}
+              setCompany={setCompany}
+              currentRestaurantIndex={currentRestaurantIndex}
+              setCurrentRestaurantIndex={setCurrentRestaurantIndex}
+            />
+          )}
+          {step === 3 && (
+            <StepThree
+              prevStep={prevStep}
+              step={step}
+              title={stepTitles[step]}
+              toast={toastData}
+              setToastData={setToastData}
+              onSubmit={() => handleSubmit()}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

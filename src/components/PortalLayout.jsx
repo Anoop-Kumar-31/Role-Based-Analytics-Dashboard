@@ -4,9 +4,9 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { Outlet, useLocation } from "react-router-dom";
 
-const PortalLayout = ({ allowedPages, portal, pageToRoute, setPopup, setIsLoggedIn}) => {
+const PortalLayout = ({ allowedPages, portal, pageToRoute, setPopup, setIsLoggedIn }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [activePage, setActivePage] = useState(()=> window.localStorage.getItem('activePage') || "DashBoard");
+  const [activePage, setActivePage] = useState(() => window.localStorage.getItem('activePage') || "DashBoard");
   const location = useLocation();
 
   // Sync activePage with current URL path on location change
@@ -39,9 +39,9 @@ const PortalLayout = ({ allowedPages, portal, pageToRoute, setPopup, setIsLogged
         allowedPages={allowedPages}
         portal={portal}
       />
-      <div className="flex flex-col flex-grow overflow-scroll">
-        <Header setActivePage={setActivePage} setIsLoggedIn={setIsLoggedIn} setPopup={setPopup}/>
-        <main className="transition-all duration-300 w-full p-4">
+      <div className="flex flex-col flex-grow overflow-auto bg-[var(--background)]">
+        <Header setActivePage={setActivePage} setIsLoggedIn={setIsLoggedIn} setPopup={setPopup} />
+        <main className="transition-all duration-300 w-full p-4 animate-fadeIn">
           <Outlet />
         </main>
       </div>

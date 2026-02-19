@@ -48,7 +48,7 @@ const OnBoarded = () => {
     company.company_id,
     company.company_name,
     company.company_email,
-    company.company_contact_no || "--",
+    company.company_phone || "--",
     <button
       onClick={() => { setShowLocation(true); setSelectedCompany(company); }}
       className="font-semibold text-green-700 flex items-center cursor-pointer"
@@ -56,7 +56,7 @@ const OnBoarded = () => {
       View <Eye size={15} className="ml-1" />
     </button>,
     company.is_active ? "Active" : "Inactive",
-    company.updated_at ? new Date(company.updated_at).toLocaleString() : '--',
+    company.updatedAt ? new Date(company.updatedAt).toLocaleString() : '--',
   ]), [companies]);
 
   const handleDelete = useCallback((index) => {
@@ -84,34 +84,34 @@ const OnBoarded = () => {
   if (showLocations) return <Locations company_id={selectedCompany?.company_id} />;
 
   return (
-    <div className="bg-[var(--background)] flex flex-col items-center h-fit p-5 max-md:p-3 pb-[120px] overflow-scroll">
+    <div className="bg-[var(--background)] flex flex-col items-center h-fit p-5 max-md:p-3 pb-[120px] overflow-auto">
       {/* Header */}
       <section className="flex flex-col justify-between w-full gap-4 py-2">
         <div className="flex justify-between w-full max-sm:flex-col max-sm:items-start max-sm:gap-3">
-          <h1 className="text-3xl font-bold text-[var(--primary-black)]">Restaurant Onboarded</h1>
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Restaurant Onboarded</h1>
         </div>
         {/* Search Bar and Filter */}
         <div className="flex flex-wrap justify-between items-center mb-4">
           <div className="flex items-center flex-grow max-w-md">
-            <div className="flex items-center bg-white px-3 py-2 rounded-l-lg border border-gray-300 border-r-0 w-full">
-              <FiSearch className="text-gray-500 mr-2" />
+            <div className="flex items-center bg-white px-3 py-2.5 rounded-l-xl border border-[var(--border)] border-r-0 w-full">
+              <FiSearch className="text-[var(--text-tertiary)] mr-2" />
               <input
                 type="text"
                 placeholder="Search"
-                className="bg-transparent outline-none w-full text-sm"
+                className="bg-transparent outline-none w-full text-sm text-[var(--text-primary)]"
               />
             </div>
-            <button className="flex items-center gap-1 px-3 py-2 bg-gray-200 border border-gray-300 rounded-r-lg text-sm text-gray-700 hover:bg-gray-300">
+            <button className="flex items-center gap-1 px-3 py-2.5 bg-[var(--filler)] border border-[var(--border)] rounded-r-xl text-sm text-[var(--text-secondary)] hover:bg-[var(--border)] transition-colors">
               Filter
-              <FiFilter className="text-gray-600" />
+              <FiFilter className="text-[var(--text-tertiary)]" />
             </button>
           </div>
         </div>
       </section>
       {loading ? (
-        <div className="text-center py-10 text-gray-600">Loading companies...</div>
+        <div className="text-center py-10 text-[var(--text-secondary)]">Loading companies...</div>
       ) : companies.length === 0 ? (
-        <div className="text-center py-10 text-gray-600">No onboarded companies found.</div>
+        <div className="text-center py-10 text-[var(--text-secondary)]">No onboarded companies found.</div>
       ) : (
         <Table
           HeadingData={HeadingData}

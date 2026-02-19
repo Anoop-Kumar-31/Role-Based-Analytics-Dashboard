@@ -3,14 +3,14 @@ import { FiChevronRight } from "react-icons/fi";
 import { FiChevronDown } from "react-icons/fi";
 import toast from "react-hot-toast";
 
-import {getRestaurantsByCompanyId , createRevenue, updateRevenue} from '../../../services/modules/restaurantService'
+import { getRestaurantsByCompanyId, createRevenue, updateRevenue } from '../../../services/modules/restaurantService'
 
 import { useSelector } from "react-redux";
 
-const RevenuePopUp = ({ onClose, data, formType="create"}) => {
+const RevenuePopUp = ({ onClose, data, formType = "create" }) => {
   const [restaurantOptions, setRestaurantOptions] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
-  const [allRestaurants , setAllRestaurants] = useState();
+  const [allRestaurants, setAllRestaurants] = useState();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const [formData, setFormData] = useState(data);
@@ -61,7 +61,7 @@ const RevenuePopUp = ({ onClose, data, formType="create"}) => {
       );
       setFilteredRestaurants(filtered);
     }
-      
+
   };
 
   const handleSelectRestaurant = (name) => {
@@ -111,7 +111,7 @@ const RevenuePopUp = ({ onClose, data, formType="create"}) => {
       return;
     }
 
-    if(formType=="create"){
+    if (formType == "create") {
       try {
         // Find the restaurant object in allRestaurants by matching restaurant_name
         const selectedRestaurant = allRestaurants?.data?.find(
@@ -124,10 +124,10 @@ const RevenuePopUp = ({ onClose, data, formType="create"}) => {
         }
 
         // Prepare payload including restaurant_id from the selected restaurant
-        const {restaurant_name, user_email, ...payload} =formData
+        const { restaurant_name, user_email, ...payload } = formData
         console.log(payload);
         // Call createRevenue API with this payload
-        const response = await createRevenue(selectedRestaurant.restaurant_id,payload);
+        const response = await createRevenue(selectedRestaurant.restaurant_id, payload);
 
         console.log(response)
         if (response && response.data) {
@@ -140,8 +140,8 @@ const RevenuePopUp = ({ onClose, data, formType="create"}) => {
         console.error("Error submitting revenue report:", error);
         toast.error("An error occurred while submitting the report.");
       }
-    } else{
-      try{
+    } else {
+      try {
         const selectedRestaurant = allRestaurants?.data?.find(
           (r) => r.restaurant_name === formData.restaurant_name
         );
@@ -151,10 +151,10 @@ const RevenuePopUp = ({ onClose, data, formType="create"}) => {
           return;
         }
 
-        const {restaurant_name, user_email, ...payload} =formData;
+        const { restaurant_name, user_email, ...payload } = formData;
         console.log(payload);
         console.log(data)
-        const response = await updateRevenue(data.revenue_id,payload);
+        const response = await updateRevenue(data.revenue_id, payload);
 
         console.log(response)
         if (response && response.data) {
@@ -164,7 +164,7 @@ const RevenuePopUp = ({ onClose, data, formType="create"}) => {
           toast.error("Failed to update revenue data.");
         }
 
-      }catch (error) {
+      } catch (error) {
         console.error("Error updating revenue report:", error);
         toast.error("An error occurred while updating the report.");
       }
@@ -211,7 +211,7 @@ const RevenuePopUp = ({ onClose, data, formType="create"}) => {
               }}
               placeholder="Enter restaurant name"
               required
-              disabled={formType === "edit" ? true: false}
+              disabled={formType === "edit" ? true : false}
               className="w-full border border-gray-300 rounded-md px-4 py-4 text-sm focus:ring-2 focus:ring-blue-400"
             />
             {dropdownOpen && (
@@ -439,8 +439,8 @@ const RevenuePopUp = ({ onClose, data, formType="create"}) => {
             </label>
             <input
               type="number" min="0"
-              name="bevarage_sale"
-              value={formData.bevarage_sale || ""}
+              name="beverage_sale"
+              value={formData.beverage_sale || ""}
               onChange={handleChange}
               placeholder="Enter non-alcoholic beverage revenue"
               className="w-full border border-gray-300 rounded-md px-4 py-4 text-sm"
@@ -464,11 +464,11 @@ const RevenuePopUp = ({ onClose, data, formType="create"}) => {
 
           {/* Divider */}
           <hr className="border-1 border-black mt-10" />
-      
+
           {/* Total Guests */}
           <div>
             <label className="block text-md font-semibold text-[var(--main-blue)] mb-2">
-              Total Guests 
+              Total Guests
             </label>
             <input
               type="number" min="0"
