@@ -5,11 +5,11 @@ import { Routes, Route, Navigate } from "react-router-dom";
 // Pages and layouts
 import TestConnection from "../pages/TestConnection";
 import Profile from "../pages/common-pages/Profile/Profile";
+import Dashboard from "../pages/common-pages/Dashboard/Dashboard";
 import Login from "../pages/Login/Login";
 import Unauthorized from "../components/Unauthorized";
 
 // Super Admin Pages
-import SADashboard from "../pages/super-admin/Dashboard/Dashboard";
 import SAUsers from "../pages/super-admin/Users/Users";
 import SAOnBoarding from "../pages/super-admin/OnBoarding/OnBoarding";
 import SAOnBoarded from "../pages/super-admin/OnBoarded/OnBoarded";
@@ -17,7 +17,6 @@ import SAExpense from "../pages/super-admin/Expense/Expense";
 import SARevenue from "../pages/super-admin/Revenue/Revenue";
 
 // Restaurant Admin Pages
-import RADashboard from "../pages/restaurant-admin/Dashboard/Dashboard";
 import RAExpense from "../pages/restaurant-admin/Expense/Expense";
 import RARevenue from "../pages/restaurant-admin/Revenue/Revenue";
 import RABlueBook from "../pages/restaurant-admin/BlueBook/BlueBook";
@@ -25,7 +24,6 @@ import RAUsers from "../pages/restaurant-admin/Users/Users";
 import RALocations from "../pages/restaurant-admin/Locations/Locations";
 
 // Restaurant Employee Pages
-import REDashboard from "../pages/restaurant-employee/Dashboard/Dashboard";
 import REExpense from "../pages/restaurant-employee/Expense/Expense";
 import RERevenue from "../pages/restaurant-employee/Revenue/Revenue";
 import REBlueBook from "../pages/restaurant-employee/BlueBook/BlueBook";
@@ -56,7 +54,7 @@ const AppRoutes = ({ portal, isLoggedIn, handleLoginClose, PAGE_TO_ROUTE, PORTAL
           </ProtectedRoute>
         }
       >
-        <Route path="dashboard" element={<SADashboard />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="users" element={<SAUsers />} />
         <Route path="onboarding" element={<SAOnBoarding />} />
         <Route path="onboarded" element={<SAOnBoarded />} />
@@ -75,7 +73,7 @@ const AppRoutes = ({ portal, isLoggedIn, handleLoginClose, PAGE_TO_ROUTE, PORTAL
           </ProtectedRoute>
         }
       >
-        <Route path="dashboard" element={<RADashboard />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="expense" element={<RAExpense />} />
         <Route path="revenue" element={<RARevenue />} />
         <Route path="blue-book" element={<RABlueBook />} />
@@ -94,7 +92,7 @@ const AppRoutes = ({ portal, isLoggedIn, handleLoginClose, PAGE_TO_ROUTE, PORTAL
           </ProtectedRoute>
         }
       >
-        <Route path="dashboard" element={<REDashboard />} />
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="expense" element={<REExpense />} />
         <Route path="revenue" element={<RERevenue />} />
         <Route path="blue-book" element={<REBlueBook />} />

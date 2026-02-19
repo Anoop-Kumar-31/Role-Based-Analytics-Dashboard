@@ -1,35 +1,60 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import toast from "react-hot-toast";
 // import "./Dashboard.css";
 import { Funnel } from "lucide-react";
 import DashboardIframe from "./DashboardIframe";
-import RestaurantDropdown from "../../components/RestaurantDropdown";
-
-const RESTAURANT_OPTIONS = Array.from({ length: 20 }, (_, i) => `Restaurant ${i + 1}`);
+import RestaurantDropdown from "../../../components/RestaurantDropdown";
+import { getDashboardStats } from "../../../services/modules/dashboardService";
+import { getRestaurantsByCompanyId } from "../../../services/modules/restaurantService";
 
 const Dashboard = () => {
-  const [restaurants, setRestaurants] = useState(RESTAURANT_OPTIONS);
+  const [restaurants, setRestaurants] = useState([]);
+  const [allRestaurants, setAllRestaurants] = useState();
+  const [restaurantOptions, setRestaurantOptions] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [selected, setSelected] = useState([]);
   const [active, setActive] = useState("prime");
   const [timePeriod, setTimePeriod] = useState(["", ""]);
   const [error, setError] = useState("");
-  const [iframeData, setIframeData] = useState({}); // This will store iframe of dashboard
+  const [dashboardStats, setDashboardStats] = useState(null);
 
-  //FOR FUTURE WHERE WE GET DATA FROM BACKEND (restaurants and iframe data)
-  // Uncomment the following useEffect to fetch data from backend when available
-  
-  // // Fetch restaurants and initial iframeData from backend
-  // useEffect(() => {
-  //   // Example: Replace with your actual API calls
-  //   fetch("/api/restaurants")
-  //     .then(res => res.json())
-  //     .then(data => setRestaurants(data))
-  //     .catch(() => setRestaurants([]));
+  // Fetch restaurants from backend
+  useEffect(() => {
+    const fetchStats = async (start = "", end = "") => {
+      try {
+        console.log("fetching the stats")
+        const response = await getDashboardStats(start, end);
+        console.log(response)
+        if (response) {
+          setDashboardStats(response);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats", err);
+        toast.error("Failed to load dashboard statistics");
+      }
+    };
+    const fetchRestaurants = async () => {
+      try {
+        const response = await getRestaurantsByCompanyId(); // Adjust based on your API return format
+        console.log(response)
+        setAllRestaurants(response);
+        if (response && Array.isArray(response.data)) {
+          const restaurantNames = response.data.map((r) => r.restaurant_name);
+          setRestaurants(restaurantNames);
+          setRestaurantOptions(restaurantNames);
+          setFilteredRestaurants(restaurantNames); // Initialize filtered list too
+        } else {
+          throw new Error("Invalid restaurant data format");
+        }
+      } catch (error) {
+        console.error("❌ Failed to fetch restaurants:", error);
+        toast.error("Failed to load restaurant list.");
+      }
+    };
 
-  //   fetch("/api/iframe-data")
-  //     .then(res => res.json())
-  //     .then(data => setIframeData(data))
-  //     .catch(() => setIframeData({}));
-  // }, []);
+    fetchRestaurants();
+    fetchStats(); // Fetch initial stats
+  }, []);
 
   // Validate dates
   const validateDates = useCallback((from, to) => {
@@ -70,10 +95,7 @@ const Dashboard = () => {
     const [from, to] = timePeriod;
     if (from && to) {
       if (validateDates(from, to)) {
-        // ADD A BACKEND CALL HERE TO APPLY THE FILTER---------------------------------
-        // LET SAY WE GOT AN I FRAME IN THE DASHBOARD THAT SHOWS THE DATA now send it to DashboardIframe component
-        const iframe= {}
-        setIframeData(iframe);
+        fetchStats(from, to);
         console.log("Filter applied with dates:", from, to);
         setActive("prime");
       }
@@ -116,92 +138,88 @@ const Dashboard = () => {
     }
     if (validateDates(from, to)) {
       setTimePeriod([from, to]);
+      fetchStats(from, to);
     }
   }, [validateDates]);
 
   return (
-    <div className="flex flex-col items-center bg-[var(--background)] overflow-scroll max-md:p-3">
+    <div className="flex flex-col items-center bg-[var(--background)] overflow-auto max-md:p-3">
       {/* Top Section */}
-      <section className="flex flex-col justify-between bg-[var(--background)] items-center w-full gap-[15px] p-5 pt-7 max-md:p-0">
-      <div className="flex flex-col justify-between gap-[15px] items-start w-[100%]">
-        <h1 className="text-3xl font-bold text-[var(--primary-black)]  ">Dashboard</h1>
-        <div className="flex w-[clamp(200px,50%,600px)] text-[var(--primary-black)] h-fit max-md:w-full">
-          <RestaurantDropdown
-            options={restaurants}
-            selected={selected}
-            setSelected={setSelected}
-            onSubmit={onSubmit}
-          />
+      {/* <section className="flex flex-col justify-between bg-[var(--background)] items-center w-full gap-4 p-5 pt-5 max-md:p-0">
+        <div className="flex flex-col justify-between gap-4 items-start w-full">
+          <h1 className="text-2xl font-bold text-[var(--text-primary)]">Dashboard</h1>
+          <div className="flex w-[clamp(200px,50%,600px)] text-[var(--text-primary)] h-fit max-md:w-full">
+            <RestaurantDropdown
+              options={restaurants}
+              selected={selected}
+              setSelected={setSelected}
+              onSubmit={onSubmit}
+            />
+          </div>
         </div>
-      </div>
-        
-      </section>
+
+      </section> */}
 
       {/* Bottom Section */}
-      <section className="flex-grow flex flex-col items-center w-[100%] p-5 py-0 gap-6 max-md:p-0">
+      <section className="flex-grow flex flex-col items-center w-full p-5 py-0 gap-5 max-md:p-0">
         {/* Filter Container */}
-        {/* <div className="flex flex-col w-full bg-white shadow-[0_2px_3px_#00000033] rounded-[10px] py-2">
-          <section>
-            <h1 className="px-5 mt-2 mb-0 text-[var(--primary-black)] text-lg">Filters</h1>
+        <div className="flex flex-col w-full bg-white shadow-sm border border-gray-200 rounded-xl py-4 transition-all hover:shadow-md">
+          <section className="px-5 mb-4 border-b border-gray-100 pb-2">
+            <p className="text-gray-400 italic text-xs">Filter currently not working</p>
+            <h1 className="text-gray-800 text-lg font-semibold flex items-center gap-2">
+              <Funnel size={20} className="text-[var(--primary-blue)]" />
+              Filters
+            </h1>
           </section>
-          <section className="flex w-full justify-between flex-wrap text-base">
-            <section className="flex items-center gap-2 flex-grow max-w-fit flex-wrap m-0 px-5">
-              <span className="font-semibold">Time Period: </span>
-              <p className="m-0">From</p>
-              <input
-                type="date"
-                name="from-date"
-                value={timePeriod[0]}
-                onChange={e => handleDateChange(0, e.target.value)}
-                className="bg-[var(--background)] border border-[var(--light-grey)] rounded-[10px] px-4 py-2 focus:shadow-[0_0_0_1px_var(--secondary-blue)] focus:outline-none"
-              />
-              <p className="m-0">To</p>
-              <input
-                type="date"
-                name="to-date"
-                value={timePeriod[1]}
-                onChange={e => handleDateChange(1, e.target.value)}
-                className="bg-[var(--background)] border border-[var(--light-grey)] rounded-[10px] px-4 py-2 focus:shadow-[0_0_0_1px_var(--secondary-blue)] focus:outline-none"
-              />
+          <section className="flex w-full justify-between flex-wrap text-sm gap-4 px-5">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="font-medium text-gray-600">Time Period:</span>
+              <div className="flex items-center gap-2 bg-gray-50 p-1 rounded-lg border border-gray-200">
+                <input
+                  type="date"
+                  value={timePeriod[0]}
+                  onChange={(e) => handleDateChange(0, e.target.value)}
+                  className="bg-transparent border-none text-gray-700 text-sm focus:ring-0 cursor-pointer"
+                />
+                <span className="text-gray-400">-</span>
+                <input
+                  type="date"
+                  value={timePeriod[1]}
+                  onChange={(e) => handleDateChange(1, e.target.value)}
+                  className="bg-transparent border-none text-gray-700 text-sm focus:ring-0 cursor-pointer"
+                />
+              </div>
               <button
                 type="button"
                 onClick={applyFilter}
-                className="bg-[var(--primary-blue)] text-white border-none px-4 py-2 rounded-[10px] flex items-center justify-center gap-1 font-medium text-base transition hover:brightness-90"
+                className="bg-[var(--primary-blue)] text-white px-4 py-1.5 rounded-lg flex items-center gap-2 font-medium transition hover:bg-blue-600 shadow-sm active:scale-95"
               >
-                <Funnel size={19} />Apply
+                Apply
               </button>
-              {error && (
-                <div className="text-red-600 mt-2 bg-white/60 backdrop-blur-sm shadow-[0_0_2px_black] absolute px-3 py-1 rounded-[10px] text-sm translate-x-[75%] translate-y-full">
-                  {error}
-                </div>
-              )}
-            </section>
-            <aside className="flex justify-between items-center flex-grow gap-2 max-w-fit flex-wrap m-2 px-5">
-              <button
-                className="bg-[var(--primary-blue)] text-white border-none px-4 py-2 rounded-[10px] font-medium text-base transition hover:brightness-90"
-                type="button"
-                onClick={() => handleQuickFilter("Last Day")}
-              >
-                Last Day
-              </button>
-              <button
-                className="bg-[var(--primary-blue)] text-white border-none px-4 py-2 rounded-[10px] font-medium text-base transition hover:brightness-90"
-                type="button"
-                onClick={() => handleQuickFilter("Last Week")}
-              >
-                Last Week
-              </button>
-              <button
-                className="bg-[var(--primary-blue)] text-white border-none px-4 py-2 rounded-[10px] font-medium text-base transition hover:brightness-90"
-                type="button"
-                onClick={() => handleQuickFilter("Last Year")}
-              >
-                Last Year
-              </button>
-            </aside>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              {["Last Week", "Last Month", "Last Year"].map((filter) => (
+                <button
+                  key={filter}
+                  className="bg-white text-gray-600 border border-gray-200 px-3 py-1.5 rounded-lg font-medium text-sm transition hover:bg-gray-50 hover:text-[var(--primary-blue)] hover:border-[var(--primary-blue)] active:scale-95"
+                  type="button"
+                  onClick={() => handleQuickFilter(filter)}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+
+            {error && (
+              <div className="w-full text-red-500 text-xs mt-2 bg-red-50 border border-red-100 px-3 py-2 rounded-lg">
+                {error}
+              </div>
+            )}
           </section>
-        </div> */}
-        <DashboardIframe active={active} setActive={setActive} iframeData={iframeData} />
+        </div>
+
+        <DashboardIframe active={active} setActive={setActive} stats={dashboardStats} />
       </section>
     </div>
   );

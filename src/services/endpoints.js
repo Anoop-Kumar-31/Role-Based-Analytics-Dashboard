@@ -152,6 +152,9 @@ const endpoints = {
 
   //AI invoice extractor
   // aiInvoiceExtractor: () => ``, // add in apiclinet if don't want localhost in frontend
+
+  // Dashboard Stats
+  getDashboardStats: () => `${base}/dashboard/stats`,
 };
 
 export default endpoints;
