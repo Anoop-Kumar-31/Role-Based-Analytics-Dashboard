@@ -20,24 +20,26 @@ const addFormData = (data, formData, setFormData, setAmounts) => {
   if (formData.type === "Salary") {
     setFormData({
       ...formData,
-      salaryAmount: data.expense_amount,
+      salaryAmount: data.amount,
     });
-  } else if (formData.type === "One-time Expense") {
+  } else if (formData.type === "One-Time Expense") {
     setFormData({
       ...formData,
-      oneTimeCategory: data.expenseCategory?.expense_detail || "",
-      oneTimeAmount: data.expense_amount,
+      oneTimeCategory: data.description || "",
+      oneTimeAmount: data.amount,
     });
   } else if (formData.type === "Other") {
     setFormData({
       ...formData,
-      otherDetails: data.expenseCategory?.expense_detail || "",
-      otherAmount: data.expense_amount,
+      otherDetails: data.description || "",
+      otherAmount: data.amount,
     });
   } else if (formData.type === "Invoice") {
     const amounts = (data.invoices || []).reduce((acc, info) => {
-      if (info.sales_category && info.unit_price !== undefined) {
-        acc[info.sales_category.sales_category_name] = info.unit_price;
+      const catName = info.salesCategory?.sales_category_name;
+      if (catName && info.unit_price !== undefined) {
+        const amount = Number(info.unit_price) * Number(info.quantity || 1);
+        acc[catName] = (acc[catName] || 0) + amount;
       }
       return acc;
     }, {});
@@ -50,15 +52,15 @@ const addFormData = (data, formData, setFormData, setAmounts) => {
   return formData;
 };
 
-const ReportExpenseForm = ({ onClose, data, type = "create" }) => {
-  console.log(data);
+const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
+  console.log("data: ", data)
   const userData = useSelector((state) => state.auth.user);
   const [formData, setFormData] = useState({
-    submission_date: data.created_at,
+    submission_date: data.createdAt ? data.createdAt.split("T")[0] : new Date().toISOString().split("T")[0],
     restaurant: data.restaurant?.restaurant_name,
-    email: type === "edit" ? data.user?.user_email : userData.email,
-    expense_date: data.expense_date,
-    type: data.expenseCategory?.category_name,
+    email: type === "edit" ? data.user?.email : userData.email,
+    expense_date: data.date,
+    type: data.category,
   });
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [restaurantOptions, setRestaurantOptions] = useState([]);
@@ -95,7 +97,7 @@ const ReportExpenseForm = ({ onClose, data, type = "create" }) => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await getRestaurantsByCompanyId(userData.company_id);
+        const response = await getRestaurantsByCompanyId();
         setAllRestaurants(response.data);
         if (response && Array.isArray(response.data)) {
           const restaurantNames = response.data.map((r) => r.restaurant_name);
@@ -262,13 +264,6 @@ const ReportExpenseForm = ({ onClose, data, type = "create" }) => {
       formPayload.append("amounts", JSON.stringify(amounts));
       formPayload.append("submission_date", new Date().toISOString().split("T")[0]);
 
-      // Log FormData contents (FormData doesn't show in console.log normally)
-      console.log("FormData contents:");
-      for (let [key, value] of formPayload.entries()) {
-        console.log(key, value);
-      }
-      console.log(formPayload);
-
       toast.promise(
         createExpense(formPayload, { headers: { "Content-Type": "multipart/form-data" } }),
         {
@@ -290,7 +285,6 @@ const ReportExpenseForm = ({ onClose, data, type = "create" }) => {
 
     } else {
       toast.promise(
-        console.log(formPayload),
         updateExpense(data.expense_id, formPayload, { headers: { "Content-Type": "multipart/form-data" } }),
         {
           loading: "Updating expense...",

@@ -20,24 +20,26 @@ const addFormData = (data, formData, setFormData, setAmounts) => {
   if (formData.type === "Salary") {
     setFormData({
       ...formData,
-      salaryAmount: data.expense_amount,
+      salaryAmount: data.amount,
     });
   } else if (formData.type === "One-Time Expense") {
     setFormData({
       ...formData,
-      oneTimeCategory: data?.expense_detail || "",
-      oneTimeAmount: data.expense_amount,
+      oneTimeCategory: data.description || "",
+      oneTimeAmount: data.amount,
     });
   } else if (formData.type === "Other") {
     setFormData({
       ...formData,
-      otherDetails: data?.expense_detail || "",
-      otherAmount: data.expense_amount,
+      otherDetails: data.description || "",
+      otherAmount: data.amount,
     });
   } else if (formData.type === "Invoice") {
     const amounts = (data.invoices || []).reduce((acc, info) => {
-      if (info.sales_category && info.unit_price !== undefined) {
-        acc[info.sales_category.sales_category_name] = info.unit_price;
+      const catName = info.salesCategory?.sales_category_name;
+      if (catName && info.unit_price !== undefined) {
+        const amount = Number(info.unit_price) * Number(info.quantity || 1);
+        acc[catName] = (acc[catName] || 0) + amount;
       }
       return acc;
     }, {});
@@ -51,13 +53,14 @@ const addFormData = (data, formData, setFormData, setAmounts) => {
 };
 
 const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
+  console.log("data: ", data)
   const userData = useSelector((state) => state.auth.user);
   const [formData, setFormData] = useState({
-    submission_date: data.created_at,
+    submission_date: data.createdAt ? data.createdAt.split("T")[0] : new Date().toISOString().split("T")[0],
     restaurant: data.restaurant?.restaurant_name,
-    email: type === "edit" ? data.user?.user_email : userData.email,
-    expense_date: data.expense_date,
-    type: data.expenseCategory?.category_name,
+    email: type === "edit" ? data.user?.email : userData.email,
+    expense_date: data.date,
+    type: data.category,
   });
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [restaurantOptions, setRestaurantOptions] = useState([]);
@@ -199,7 +202,7 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
       throw error;
     }
   };
-    
+
   const normalizeCategory = (cat) => {
     if (cat === "Non-Alcoholic Beverages") return "NA Beverage";
     // add more mappings here if needed in future
@@ -279,7 +282,7 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
           duration: 2000,
         }
       );
-      
+
     } else {
       toast.promise(
         updateExpense(data.expense_id, formPayload, { headers: { "Content-Type": "multipart/form-data" } }),
@@ -412,7 +415,7 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
               <div
                 className={`w-full my-4 border-2 border-dashed rounded-md flex flex-col items-center justify-center py-8 cursor-pointer 
                   ${dragActive ? "border-blue-600 bg-blue-100" : "border-gray-400 bg-white"}`}
-                
+
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
@@ -439,7 +442,7 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
                 {file && (
                   <div className="mt-2 text-green-700 text-sm">{file.name}</div>
                 )}
-                <button 
+                <button
                   type="button"
                   onClick={handleRemoveFile}
                   className="mt-2 text-sm text-red-600 hover:underline"

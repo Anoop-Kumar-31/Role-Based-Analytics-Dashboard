@@ -1,9 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { FiSearch, FiFilter, FiRefreshCw, FiDownload } from "react-icons/fi";
 import { Pencil, Trash2 } from "lucide-react";
-// import mockData from "./mockData.json";
 import toast from "react-hot-toast";
-// import "react-hot-toast/dist/ReactToastify.css";
 import Table from "../../../components/Table";
 import ConfirmationPopUp from "../../../components/ConfirmationPopUp";
 import ReportExpenseForm from "./ReportExpenseForm";
@@ -85,8 +83,7 @@ const Expense = () => {
     fetchExpenses();
   }, [shouldRefetch]);
 
-
-  // Commented out until real expense added IMPORTANT Don't remove this code below
+  // CAUTION: Commented out until real expense added IMPORTANT Don't remove this code below
   // const handleDownload = () => {
   //   if (!allExpenses || allExpenses.length === 0) {
   //     toast.error("No expenses available to download");
