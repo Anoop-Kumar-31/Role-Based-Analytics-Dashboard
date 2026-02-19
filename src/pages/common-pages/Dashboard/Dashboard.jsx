@@ -163,7 +163,7 @@ const Dashboard = () => {
       {/* Bottom Section */}
       <section className="flex-grow flex flex-col items-center w-full p-5 py-0 gap-5 max-md:p-0">
         {/* Filter Container */}
-        <div className="flex flex-col w-full bg-white shadow-sm border border-gray-200 rounded-xl py-4 transition-all hover:shadow-md">
+        {/* <div className="flex flex-col w-full bg-white shadow-sm border border-gray-200 rounded-xl py-4 transition-all hover:shadow-md">
           <section className="px-5 mb-4 border-b border-gray-100 pb-2">
             <p className="text-gray-400 italic text-xs">Filter currently not working</p>
             <h1 className="text-gray-800 text-lg font-semibold flex items-center gap-2">
@@ -217,7 +217,7 @@ const Dashboard = () => {
               </div>
             )}
           </section>
-        </div>
+        </div> */}
 
         <DashboardIframe active={active} setActive={setActive} stats={dashboardStats} />
       </section>

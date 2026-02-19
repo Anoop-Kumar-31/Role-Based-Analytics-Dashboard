@@ -83,7 +83,7 @@ const DashboardIframe = ({ stats }) => {
   };
 
   return (
-    <div className="w-full h-full pb-10 overflow-y-auto space-y-8">
+    <div className="w-full h-full pb-10 overflow-y-auto space-y-8 mt-6">
 
       {/* 🧭 1. KPI STRIP */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -150,42 +150,6 @@ const DashboardIframe = ({ stats }) => {
             </div>
           </div>
           <p className="text-xs text-gray-400 mt-1">Net Profit / Revenue</p>
-        </div>
-      </div>
-
-      {/* 📈 2. TREND CHART */}
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
-          <TrendingUp size={20} className="text-blue-600" />
-          Financial Trend Analysis
-        </h3>
-        <div className="h-[350px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={trendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.1} />
-                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#F97316" stopOpacity={0.1} />
-                  <stop offset="95%" stopColor="#F97316" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-              <XAxis dataKey="date" axisLine={true} tickLine={true} tick={{ fill: '#6B7280', fontSize: 12 }} dy={10} />
-              <YAxis axisLine={true} tickLine={true} tick={{ fill: '#6B7280', fontSize: 12 }} tickFormatter={(val) => `₹${val / 1000}k`} />
-              <Tooltip
-                contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', border: 'none' }}
-              />
-              <Legend verticalAlign="top" height={36} />
-              <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#3B82F6" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
-              <Area type="monotone" dataKey="expense" name="Expense" stroke="#F97316" strokeWidth={3} fillOpacity={1} fill="url(#colorExpense)" />
-              {/* Optional: Add Profit Line if desired, or keep simpler with just Rev/Exp */}
-              <Area type="monotone" dataKey="net_profit" name="Profit" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorProfit)" />
-
-            </AreaChart>
-          </ResponsiveContainer>
         </div>
       </div>
 
@@ -326,6 +290,41 @@ const DashboardIframe = ({ stats }) => {
             </div>
           </div>
 
+        </div>
+      </div>
+      {/* 📈 2. TREND CHART */}
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <h3 className="text-lg font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <TrendingUp size={20} className="text-blue-600" />
+          Financial Trend Analysis
+        </h3>
+        <div className="h-[350px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={trendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.1} />
+                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#F97316" stopOpacity={0.1} />
+                  <stop offset="95%" stopColor="#F97316" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+              <XAxis dataKey="date" axisLine={true} tickLine={true} tick={{ fill: '#6B7280', fontSize: 12 }} dy={10} />
+              <YAxis axisLine={true} tickLine={true} tick={{ fill: '#6B7280', fontSize: 12 }} tickFormatter={(val) => `₹${val / 1000}k`} />
+              <Tooltip
+                contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', border: 'none' }}
+              />
+              <Legend verticalAlign="top" height={36} />
+              <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#3B82F6" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
+              <Area type="monotone" dataKey="expense" name="Expense" stroke="#F97316" strokeWidth={3} fillOpacity={1} fill="url(#colorExpense)" />
+              {/* Optional: Add Profit Line if desired, or keep simpler with just Rev/Exp */}
+              <Area type="monotone" dataKey="net_profit" name="Profit" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorProfit)" />
+
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>

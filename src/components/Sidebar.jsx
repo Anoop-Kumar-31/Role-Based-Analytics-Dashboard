@@ -66,7 +66,7 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
     `}>
 
       {/* Navigation Section */}
-      <nav className={`flex flex-col gap-2 ${isOpen ? 'w-[240px]' : 'w-fit'}`}>
+      <nav className={`flex flex-col gap-2 ${isOpen ? 'w-[225px]' : 'w-fit'}`}>
         <div className={`h-[60px] ${isOpen ? 'aspect-[2.5]' : ''} flex items-center justify-center`}>
           <img src={logo} alt="logo" className={`py-1 h-full w-6/10 ${isOpen ? 'block' : 'hidden'}
           invert-[1] brightness-[0]`} />
@@ -136,7 +136,7 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
             rounded-r-xl
           `}
           style={{
-            transform: `translateX(${isOpen ? '230px' : '52px'})`
+            transform: `translateX(${isOpen ? '215px' : '0px'})`
           }}
         >
           {isOpen ? (
@@ -145,7 +145,7 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
               <span className="text-base leading-none hidden">Close</span>
             </>
           ) : (
-            <Menu size={20} />
+            <Menu size={22} />
           )}
         </div>
       </div>
