@@ -43,7 +43,7 @@ const Popup = ({ onClose, onSubmit }) => {
   };
 
   return (
-    <div className="fixed inset-0 h-[calc(100vh-60px)] bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="fixed inset-0 h-full bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
       <form
         className="bg-white rounded-2xl shadow-elevated w-[clamp(100px,38%,600px)] flex flex-col gap-5 relative justify-center items-center overflow-hidden animate-slideUp"
         onSubmit={handleSubmit}

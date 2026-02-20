@@ -1,42 +1,58 @@
 import { useState, useRef, useEffect } from "react";
 import {
   FiChevronRight,
-  FiChevronDown,
-  FiChevronUp,
   FiArrowLeft,
   FiPlus,
-  FiMinus,
 } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { getRestaurantsByCompanyId } from "../../../services/modules/restaurantService";
+import { createBlueBook, getBlueBookByDate } from "../../../services/modules/blueBookService";
+import BlueBookForm from "./BlueBookForm";
+import Table from "../../../components/Table";
+import BlueBookEditPopUp from "./BlueBookEditPopUp";
+import { Pencil } from "lucide-react";
 
 const BlueBook = ({ setActivePage }) => {
   const userData = useSelector((state) => state.auth.user);
   const company_id = userData?.company_id;
 
   const [restaurantOptions, setRestaurantOptions] = useState([]);
+  const [allRestaurants, setAllRestaurants] = useState([]);
+
+  // Creation Form State
   const [formData, setFormData] = useState({
     restaurant: "",
-    email: "",
+    email: userData?.email || "",
     date: "",
   });
 
+  // Check Logs State
+  const [checkLogsData, setCheckLogsData] = useState({
+    restaurant: "",
+    date: "",
+  });
+  const [logsList, setLogsList] = useState([]);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [selectedLog, setSelectedLog] = useState(null);
+
+  const [isCheckingLogs, setIsCheckingLogs] = useState(false);
+  const [isAddingData, setIsAddingData] = useState(false);
+
+  // Dropdown for "Check Logs" restaurant selection
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
         const response = await getRestaurantsByCompanyId(company_id);
-        console.log(response)
         if (response && Array.isArray(response.data)) {
+          setAllRestaurants(response.data);
           const restaurantNames = response.data.map((r) => r.restaurant_name);
-          console.log(restaurantNames)
           setRestaurantOptions(restaurantNames);
           setFilteredRestaurants(restaurantNames);
-        } else {
-          throw new Error("Invalid restaurant data format");
         }
       } catch (error) {
         console.error("Failed to fetch restaurants:", error);
@@ -45,26 +61,6 @@ const BlueBook = ({ setActivePage }) => {
     };
     if (company_id) fetchRestaurants();
   }, [company_id]);
-  const [isCheckingLogs, setIsCheckingLogs] = useState(false);
-  const [isAddingData, setIsAddingData] = useState(false);
-  const dropdownRef = useRef(null);
-
-  const dynamicFields = [
-    "Include salaried and managers with explanation",
-    "86’d Items",
-    "WINS!",
-    "Misses",
-    "Staff Notes",
-    "Maintenance Issues",
-    "Misc Notes",
-  ];
-
-  const [notesData, setNotesData] = useState(
-    dynamicFields.reduce((acc, field) => {
-      acc[field] = [""];
-      return acc;
-    }, {})
-  );
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -76,9 +72,75 @@ const BlueBook = ({ setActivePage }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleChange = (e) => {
+  const handleBack = () => {
+    setIsAddingData(false);
+    setIsCheckingLogs(false);
+    setLogsList([]);
+    setCheckLogsData({ restaurant: "", date: "" });
+  };
+
+  // --- Creation Logic ---
+  const handleCreateSubmit = async (data, notesData) => {
+    // Find restaurant ID
+    const selectedRestaurant = allRestaurants.find(
+      (r) => r.restaurant_name === data.restaurant
+    );
+
+    if (!selectedRestaurant) {
+      toast.error("Please select a valid restaurant.");
+      return;
+    }
+
+    // Default to today's date if not provided
+    const submissionDate = data.date || new Date().toISOString().split('T')[0];
+
+    const payload = {
+      restaurant_id: selectedRestaurant.restaurant_id || selectedRestaurant.id,
+      date: submissionDate,
+      email: data.email,
+      weather: data.weather,
+      breakfastSales: parseFloat(data.breakfastSales) || 0,
+      breakfastGuests: parseInt(data.breakfastGuests) || 0,
+      lunchSales: parseFloat(data.lunchSales) || 0,
+      lunchGuests: parseInt(data.lunchGuests) || 0,
+      dinnerSales: parseFloat(data.dinnerSales) || 0,
+      dinnerGuests: parseInt(data.dinnerGuests) || 0,
+      totalSales: parseFloat(data.totalSales) || 0,
+      totalSalesLastYear: parseFloat(data.totalSalesLastYear) || 0,
+      foodSales: parseFloat(data.foodSales) || 0,
+      lbwSales: parseFloat(data.lbwSales) || 0,
+      hourlyLabor: parseFloat(data.hourlyLabor) || 0,
+      hourlyLaborPercent: parseFloat(data.hourlyLaborPercent) || 0,
+      hoursWorked: parseFloat(data.hoursWorked) || 0,
+      splh: parseFloat(data.splh) || 0,
+      // Map dynamic fields to API keys
+      item86s: notesData["86’d Items"].filter(n => n.trim()).map(comment => ({ comment })),
+      miscNotes: notesData["Misc Notes"].filter(n => n.trim()).map(comment => ({ comment })),
+      staffNotes: notesData["Staff Notes"].filter(n => n.trim()).map(comment => ({ comment })),
+      callOuts: notesData["Include salaried and managers with explanation"].filter(n => n.trim()).map(comment => ({ comment })),
+      maintenanceIssues: notesData["Maintenance Issues"].filter(n => n.trim()).map(comment => ({ comment })),
+      misses: notesData["Misses"].filter(n => n.trim()).map(comment => ({ comment })),
+      wins: notesData["WINS!"].filter(n => n.trim()).map(comment => ({ comment })),
+    };
+
+    try {
+      // console.log("Payload:", payload);
+      const response = await createBlueBook(payload);
+
+      if (response && response.blueBook) {
+        toast.success("Blue Book created successfully!");
+        handleBack();
+      }
+    } catch (error) {
+      console.error("Failed to create blue book:", error);
+      toast.error("Failed to create blue book.");
+    }
+  };
+
+  // --- Check Logs Logic ---
+  const handleCheckLogsChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setCheckLogsData((prev) => ({ ...prev, [name]: value }));
 
     if (name === "restaurant") {
       setDropdownOpen(true);
@@ -89,35 +151,84 @@ const BlueBook = ({ setActivePage }) => {
     }
   };
 
-  const handleSelectRestaurant = (name) => {
-    setFormData((prev) => ({ ...prev, restaurant: name }));
+  const handleSelectRestaurantLogs = (name) => {
+    setCheckLogsData((prev) => ({ ...prev, restaurant: name }));
     setDropdownOpen(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleCheckLogsSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitted:", formData);
-    console.log("Notes:", notesData);
+    setLogsList([]);
+
+    const selectedRestaurant = allRestaurants.find(
+      (r) => r.restaurant_name === checkLogsData.restaurant
+    );
+
+    if (!selectedRestaurant) {
+      toast.error("Please select a valid restaurant.");
+      return;
+    }
+    if (!checkLogsData.date) {
+      toast.error("Please select a date.");
+      return;
+    }
+
+    try {
+      const response = await getBlueBookByDate(selectedRestaurant.restaurant_id || selectedRestaurant.id, checkLogsData.date);
+      if (response && response.blueBook) {
+        // response.bluebook could be an object (single log) or array depending on backend, assuming single object based on "ByDate"
+        const logItem = Array.isArray(response.blueBook) ? response.blueBook[0] : response.blueBook;
+        if (logItem) {
+          // Enrich with restaurant name for display if needed, though we know it
+          setLogsList([{ ...logItem, restaurant_name: checkLogsData.restaurant }]);
+        } else {
+          toast.error("No Blue Book found for this date.");
+        }
+      } else {
+        toast.error("No Blue Book found for this date.");
+      }
+
+    } catch (error) {
+      console.error("Failed to fetch blue book logs:", error);
+      toast.error("Failed to fetch logs.");
+    }
   };
 
-  const handleBack = () => {
-    setIsAddingData(false);
-    setIsCheckingLogs(false);
+  const handleEditClick = (row) => {
+    setSelectedLog(row);
+    setIsEditPopupOpen(true);
   };
 
-  const handleNoteChange = (field, index, value) => {
-    const updated = [...notesData[field]];
-    updated[index] = value;
-    setNotesData({ ...notesData, [field]: updated });
+  const handleEditClose = (shouldRefresh) => {
+    setIsEditPopupOpen(false);
+    setSelectedLog(null);
+    if (shouldRefresh) {
+      // Trigger re-fetch
+      // Synthetically call submit to refresh list
+      handleCheckLogsSubmit({ preventDefault: () => { } });
+    }
   };
 
-  const addNoteField = (field) => {
-    setNotesData({ ...notesData, [field]: [...notesData[field], ""] });
+  // define table structure
+  const HeadingData = {
+    th: [
+      { title: "Date" },
+      { title: "Restaurant" },
+      { title: "Total Sales" },
+      { title: "Guest Count" }, // combining breakfast+lunch+dinner guests? or just showing one?
+      { title: "Weather" },
+      { title: "Actions" },
+    ],
   };
 
-  const removeNoteField = (field, index) => {
-    const updated = notesData[field].filter((_, i) => i !== index);
-    setNotesData({ ...notesData, [field]: updated });
+  const formatLogDataForTable = (logs) => {
+    return logs.map(log => ({
+      date: log.date?.split('T')[0],
+      restaurant: log.restaurant_name || checkLogsData.restaurant,
+      totalSales: `$${parseFloat(log.total_sales || 0).toFixed(2)}`,
+      guestCount: (parseInt(log.breakfast_guests) || 0) + (parseInt(log.lunch_guests) || 0) + (parseInt(log.dinner_guests) || 0),
+      weather: log.weather,
+    }));
   };
 
   return (
@@ -149,219 +260,138 @@ const BlueBook = ({ setActivePage }) => {
 
           <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-4">Manager’s Blue Book</h2>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {!isAddingData && (
-              <div className="relative" ref={dropdownRef}>
-                <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">
-                  What restaurant is this report for? <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="restaurant"
-                    autoComplete="off"
-                    value={formData.restaurant}
-                    onChange={handleChange}
-                    onClick={() => {
-                      if (!dropdownOpen) {
-                        setFormData((prev) => ({ ...prev, restaurant: "" }));
-                        setFilteredRestaurants(restaurantOptions);
-                      }
-                      setDropdownOpen(true);
-                    }}
-                    placeholder="Enter restaurant name"
-                    required
-                    className="w-full outline-none border border-[var(--border)] rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent pr-10 transition-all"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] pointer-events-none text-xl">
-                    {dropdownOpen ? <FiChevronUp /> : <FiChevronDown />}
-                  </span>
-                </div>
-                {dropdownOpen && (
-                  <ul className="absolute z-10 bg-white w-full border border-[var(--border)] border-t-0 max-h-48 overflow-y-auto rounded-b-xl shadow-lg text-sm mt-1">
-                    {filteredRestaurants.length === 0 ? (
-                      <li className="px-4 py-2 text-[var(--text-tertiary)]">No match found</li>
-                    ) : (
-                      filteredRestaurants.map((option, index) => (
-                        <li
-                          key={index}
-                          onClick={() => handleSelectRestaurant(option)}
-                          className="px-4 py-2 hover:bg-[var(--primary-light)] cursor-pointer text-[var(--text-primary)] transition-colors"
-                        >
-                          {option}
-                        </li>
-                      ))
-                    )}
-                  </ul>
-                )}
-              </div>
-            )}
+          {/* MAIN MENU BUTTONS */}
+          {!isCheckingLogs && !isAddingData && (
+            <div className="flex justify-center gap-4 pt-4 font-medium">
+              <button
+                type="button"
+                onClick={() => setIsCheckingLogs(true)}
+                className="flex items-center gap-2 px-7 py-2.5 bg-white text-[var(--primary-accent)] border-2 border-[var(--primary-accent)] rounded-xl hover:shadow-md text-sm transition-all duration-200"
+              >
+                Check Logs
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsAddingData(true)}
+                className="px-9 py-2.5 bg-[var(--primary-accent)] text-white rounded-xl hover:bg-[var(--primary-accent-hover)] hover:shadow-md text-sm transition-all duration-200"
+              >
+                Add Today's Data
+              </button>
+            </div>
+          )}
 
-            {isCheckingLogs && !isAddingData && (
-              <div>
-                <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">
-                  Date of the report? <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  name="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  required
-                  className="w-full border border-[var(--border)] rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
-                />
-              </div>
-            )}
+          {/* ADD DATA FORM */}
+          {isAddingData && (
+            <BlueBookForm
+              initialData={{ email: userData?.email || "" }}
+              companyId={company_id}
+              allRestaurants={allRestaurants}
+              setAllRestaurants={setAllRestaurants}
+              onSubmit={handleCreateSubmit}
+              onCancel={handleBack}
+            />
+          )}
 
-            {isAddingData && (
-              <>
-                <div>
-                  <label className="block font-medium text-sm mb-1 text-[var(--text-secondary)]">Email *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
-                    placeholder="danielr@takeflightrg.com"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block font-medium text-sm mb-1 text-[var(--text-secondary)]">Weather</label>
-                  <input
-                    type="text"
-                    name="weather"
-                    value={formData.weather || ""}
-                    onChange={handleChange}
-                    className="w-full border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
-                  />
-                </div>
-
-                <hr className="my-10" />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <InputField name="breakfastSales" label="Breakfast Sales ($)" onChange={handleChange} />
-                  <InputField name="breakfastGuests" label="Breakfast Guest Count" onChange={handleChange} />
-                  <InputField name="lunchSales" label="Lunch Sales ($)" onChange={handleChange} />
-                  <InputField name="lunchGuests" label="Lunch Guest Count" onChange={handleChange} />
-                  <InputField name="dinnerSales" label="Dinner Sales ($)" onChange={handleChange} />
-                  <InputField name="dinnerGuests" label="Dinner Guest Count" onChange={handleChange} />
-                </div>
-
-                <hr className="my-10" />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <InputField name="totalSales" label="Total Sales ($)" onChange={handleChange} />
-                  <InputField name="totalSalesLastYear" label="Total Sales Last Year ($)" onChange={handleChange} />
-                  <InputField name="foodSales" label="Total Food Sales ($)" onChange={handleChange} />
-                  <InputField name="lbwSales" label="Total LBW Sales ($)" onChange={handleChange} />
-                  <InputField name="hourlyLabor" label="Total Hourly Labor ($)" onChange={handleChange} />
-                  <InputField name="hourlyLaborPercent" label="Total Hourly Labor (%)" onChange={handleChange} />
-                  <InputField name="hoursWorked" label="Total Hours Worked" onChange={handleChange} />
-                  <InputField name="splh" label="Sales Per Labor Hour (SPLH)" onChange={handleChange} />
-                </div>
-
-                <hr className="my-10" />
-
-                {dynamicFields.map((field) => (
-                  <div key={field} className="mb-6">
-                    <div className="flex justify-between items-center mb-2">
-                      <label className="block font-medium text-sm text-[var(--text-primary)]">{field}</label>
-                      <button
-                        type="button"
-                        onClick={() => addNoteField(field)}
-                        className="bg-[var(--primary-accent)] text-white text-sm rounded-full w-6 h-6 flex items-center justify-center hover:bg-[var(--primary-accent-hover)] transition-colors"
-                      >
-                        <FiPlus />
-                      </button>
-                    </div>
-                    {notesData[field].map((val, idx) => (
-                      <div key={idx} className="relative mb-2">
-                        <input
-                          type="text"
-                          value={val}
-                          onChange={(e) => handleNoteChange(field, idx, e.target.value)}
-                          className="w-full border border-[var(--border)] rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
-                        />
-                        {idx > 0 && (
-                          <button
-                            type="button"
-                            onClick={() => removeNoteField(field, idx)}
-                            className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
-                          >
-                            <FiMinus className="text-xs" />
-                          </button>
-                        )}
-                      </div>
-                    ))}
+          {/* CHECK LOGS VIEW */}
+          {isCheckingLogs && (
+            <div>
+              <form onSubmit={handleCheckLogsSubmit} className="space-y-6 mb-8 border-b pb-8">
+                <div className="relative" ref={dropdownRef}>
+                  <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">
+                    Select Restaurant <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="restaurant"
+                      autoComplete="off"
+                      value={checkLogsData.restaurant}
+                      onChange={handleCheckLogsChange}
+                      onClick={() => {
+                        if (!dropdownOpen) {
+                          setCheckLogsData((prev) => ({ ...prev, restaurant: "" }));
+                          setFilteredRestaurants(restaurantOptions);
+                        }
+                        setDropdownOpen(true);
+                      }}
+                      placeholder="Enter restaurant name"
+                      required
+                      className="w-full outline-none border border-[var(--border)] rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent pr-10 transition-all"
+                    />
                   </div>
-                ))}
+                  {dropdownOpen && (
+                    <ul className="absolute z-10 bg-white w-full border border-[var(--border)] border-t-0 max-h-48 overflow-y-auto rounded-b-xl shadow-lg text-sm mt-1">
+                      {filteredRestaurants.length === 0 ? (
+                        <li className="px-4 py-2 text-[var(--text-tertiary)]">No match found</li>
+                      ) : (
+                        filteredRestaurants.map((option, index) => (
+                          <li
+                            key={index}
+                            onClick={() => handleSelectRestaurantLogs(option)}
+                            className="px-4 py-2 hover:bg-[var(--primary-light)] cursor-pointer text-[var(--text-primary)] transition-colors"
+                          >
+                            {option}
+                          </li>
+                        ))
+                      )}
+                    </ul>
+                  )}
+                </div>
 
-                <div className="flex justify-center gap-4 mt-6">
-                  <button
-                    type="button"
-                    onClick={handleBack}
-                    className="px-6 py-2.5 bg-white border border-[var(--border)] rounded-xl hover:bg-[var(--filler)] text-[var(--text-secondary)] text-sm font-medium transition-colors"
-                  >
-                    Cancel
-                  </button>
+                <div>
+                  <label className="block text-sm font-semibold text-[var(--text-primary)] mb-2">
+                    Select Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="date"
+                    value={checkLogsData.date}
+                    onChange={handleCheckLogsChange}
+                    required
+                    className="w-full border border-[var(--border)] rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
+                  />
+                </div>
+                <div className="flex justify-center pt-4">
                   <button
                     type="submit"
-                    className="px-8 py-2.5 bg-[var(--primary-accent)] text-white rounded-xl hover:bg-[var(--primary-accent-hover)] text-sm font-medium transition-all duration-200 hover:shadow-md"
+                    className="px-9 py-2.5 bg-[var(--primary-accent)] text-white rounded-xl hover:bg-[var(--primary-accent-hover)] text-sm font-medium transition-all duration-200 hover:shadow-md"
                   >
-                    Submit
+                    Check
                   </button>
                 </div>
-              </>
-            )}
+              </form>
 
-            {!isCheckingLogs && !isAddingData && (
-              <div className="flex justify-center gap-4 pt-4 font-medium">
-                <button
-                  type="button"
-                  onClick={() => setIsCheckingLogs(true)}
-                  className="flex items-center gap-2 px-7 py-2.5 bg-white text-[var(--primary-accent)] border-2 border-[var(--primary-accent)] rounded-xl hover:shadow-md text-sm transition-all duration-200"
-                >
-                  Check Logs
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsAddingData(true)}
-                  className="px-9 py-2.5 bg-[var(--primary-accent)] text-white rounded-xl hover:bg-[var(--primary-accent-hover)] hover:shadow-md text-sm transition-all duration-200"
-                >
-                  Add Today's Data
-                </button>
-              </div>
-            )}
-
-            {isCheckingLogs && !isAddingData && (
-              <div className="flex justify-center pt-4">
-                <button
-                  type="submit"
-                  className="px-9 py-2.5 bg-[var(--primary-accent)] text-white rounded-xl hover:bg-[var(--primary-accent-hover)] text-sm font-medium transition-all duration-200 hover:shadow-md"
-                >
-                  Check
-                </button>
-              </div>
-            )}
-          </form>
+              {/* RESULTS TABLE */}
+              {logsList.length > 0 && (
+                <Table
+                  HeadingData={HeadingData}
+                  bodyData={formatLogDataForTable(logsList)}
+                  actionData={[
+                    ({ rowIndex }) => (
+                      <Pencil
+                        size={16}
+                        className="cursor-pointer text-green-600"
+                        onClick={() => handleEditClick(logsList[rowIndex])}
+                      />
+                    )
+                  ]}
+                />
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      {isEditPopupOpen && selectedLog && (
+        <BlueBookEditPopUp
+          data={selectedLog}
+          onClose={handleEditClose}
+          companyId={company_id}
+          allRestaurants={allRestaurants}
+        />
+      )}
     </div>
   );
 };
-
-const InputField = ({ name, label, onChange }) => (
-  <div>
-    <label className="block text-sm font-medium mb-1 text-[var(--text-secondary)]">{label}</label>
-    <input
-      type="number"
-      name={name}
-      onChange={onChange}
-      className="w-full border border-[var(--border)] rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-[var(--primary-accent)] focus:border-transparent transition-all"
-    />
-  </div>
-);
 
 export default BlueBook;

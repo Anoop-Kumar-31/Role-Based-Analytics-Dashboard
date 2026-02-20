@@ -37,6 +37,7 @@ const endpoints = {
   // Blue Book
   createBlueBook: () => `${base}/blue-book`,
   getBlueBookByDate: (restaurant_id, date) => `${base}/blue-book/${restaurant_id}/${date}`,
+  updateBlueBook: (blue_book_id) => `${base}/blue-book/${blue_book_id}`,
 
   // Staff Notes (Blue Book)
   createStaffNote: (blue_book_id) => `${base}/blue-book/${blue_book_id}/staff-notes`,
