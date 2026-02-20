@@ -3,7 +3,6 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Pages and layouts
-import TestConnection from "../pages/TestConnection";
 import Profile from "../pages/common-pages/Profile/Profile";
 import Dashboard from "../pages/common-pages/Dashboard/Dashboard";
 import Login from "../pages/Login/Login";
@@ -101,7 +100,6 @@ const AppRoutes = ({ portal, isLoggedIn, handleLoginClose, PAGE_TO_ROUTE, PORTAL
     )}
 
     {/* Always available */}
-    <Route path="/test-connection" element={<TestConnection />} />
     <Route path="*" element={<Unauthorized />} />
   </Routes>
 );
