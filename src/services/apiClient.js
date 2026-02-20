@@ -5,11 +5,11 @@ import { store } from '../store';
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 if (!baseUrl) {
-  console.warn('VITE_API_BASE_URL is not defined in environment variables. Falling back to localhost.');
+  console.error('VITE_API_BASE_URL is not defined in environment variables. Falling back to localhost.');
 }
 
 const apiClient = axios.create({
-  baseURL: baseUrl || 'http://localhost:8080',
+  baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
