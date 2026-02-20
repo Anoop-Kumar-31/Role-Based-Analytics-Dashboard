@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { FiSearch, FiFilter, FiRefreshCw, FiDownload } from "react-icons/fi";
 import { Pencil, Trash2 } from "lucide-react";
-// import mockData from "./mockData.json";
 import toast from "react-hot-toast";
 // import "react-hot-toast/dist/ReactToastify.css";
 import Table from "../../../components/Table";

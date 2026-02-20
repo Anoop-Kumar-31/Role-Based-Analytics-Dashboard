@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Pencil } from "lucide-react";
 import Table from "../../../../components/Table";
 import PopUp from "./PopUp";
-import mockData from './mockData.json';
 import { toast } from "react-hot-toast";
 
 import { getRestaurantsByCompanyId } from "../../../../services/modules/restaurantService";
@@ -20,7 +19,7 @@ const HeadingData = {
 const Locations = ({ company_id }) => {
   console.log(company_id);
   const [popUp, setPopup] = useState(false);
-  const [restaurants, setRestaurants] = useState(mockData);
+  const [restaurants, setRestaurants] = useState([]);
   const [allResponse, setAllResponse] = useState({});
   const [selectedRestaurant, setSelectedRestaurant] = useState({});
   const hasFetched = useRef(false);
