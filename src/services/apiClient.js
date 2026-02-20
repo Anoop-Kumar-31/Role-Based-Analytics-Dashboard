@@ -1,8 +1,14 @@
 // src/services/apiClient.js
 import axios from 'axios';
-import { store } from '../store'; // ⬅️ Import the Redux store
+import { store } from '../store';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const baseUrl = process.env.VITE_API_BASE_URL;
+
+if (!baseUrl) {
+  throw new Error('VITE_API_BASE_URL is not defined in .env file');
+}
 
 const apiClient = axios.create({
   baseURL: baseUrl,
@@ -12,12 +18,12 @@ const apiClient = axios.create({
   },
 });
 
-// ✅ Add interceptor to pull token from Redux store
+// Add interceptor to pull token from Redux store
 apiClient.interceptors.request.use((config) => {
   const state = store.getState();
-  const token = state.auth?.token; // Adjust path based on your slice
+  const token = state.auth?.token;
   if (token) {
-    config.headers["x-access-token"] = token; // or `Authorization: Bearer ${token}`
+    config.headers["x-access-token"] = token;
   }
   return config;
 });
