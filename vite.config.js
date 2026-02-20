@@ -8,9 +8,18 @@ export default defineConfig({
     tailwindcss(),
   ],
   build: {
-    outDir: 'build',
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          charts: ['recharts'],
+          utils: ['xlsx']
+        }
+      }
+    }
   },
-  server:{
+  server: {
     host: true,
     open: true,
     port: 3000,
