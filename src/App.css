@@ -67,9 +67,19 @@ html, body, #root {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 .animate-fadeIn   { animation: fadeIn 0.3s ease-out both; }
 .animate-slideDown{ animation: slideDown 0.2s ease-out both; }
 .animate-slideUp  { animation: slideUp 0.3s ease-out both; }
+.animate-pulse-slow { animation: pulse 2s ease-in-out infinite; }
 
 /* ─── Glassmorphism utility ─── */
 .glass {
@@ -89,4 +99,5 @@ html, body, #root {
 
 .no-spinner {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
