@@ -284,11 +284,12 @@ const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
       );
 
     } else {
-      toast.promise(
+      const response = toast.promise(
         updateExpense(data.expense_id, formPayload, { headers: { "Content-Type": "multipart/form-data" } }),
         {
           loading: "Updating expense...",
           success: (response) => {
+            console.log("response: ", response)
             onClose(true, response.data);
             return "Expense updated successfully!";
           },
