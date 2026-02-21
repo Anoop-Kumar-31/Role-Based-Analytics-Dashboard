@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
+import { useSelector } from "react-redux";
 import { updateUser } from "../services/endpoints";
 import toast from "react-hot-toast";
 
 const Popup = ({ onClose }) => {
-  const { user } = useAuth();
+  const user = useSelector((state) => state.auth.user);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
