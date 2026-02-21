@@ -44,7 +44,9 @@ const Popup = ({ onClose }) => {
     }
 
     const response = await toast.promise(
-      updateUser(user?.user_id),
+      updateUser(user?.user_id, {
+        password: newPassword,
+      }),
       {
         loading: 'Updating user Information...',
         success: 'User Information updated successfully!',
