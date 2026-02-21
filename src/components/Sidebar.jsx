@@ -62,7 +62,7 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
       transition-all duration-300 ease-in-out select-none pb-2
       border-r border-[rgba(255,255,255,0.06)] z-3
       max-md:absolute
-      ${isOpen ? '' : 'max-md:translate-x-[-52px]'}
+      ${isOpen ? '' : 'max-md:translate-x-[-60px]'}
     `}>
 
       {/* Navigation Section */}
@@ -136,7 +136,7 @@ const Sidebar = ({ activePage, isOpen, setIsOpen, setActivePage, allowedPages })
             rounded-r-xl
           `}
           style={{
-            transform: `translateX(${isOpen ? '215px' : '0px'})`
+            transform: `translateX(${isOpen ? '215px' : '50px'})`
           }}
         >
           {isOpen ? (

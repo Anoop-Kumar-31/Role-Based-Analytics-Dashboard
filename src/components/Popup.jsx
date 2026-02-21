@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { useSelector } from "react-redux";
-import { updateUser } from "../services/endpoints";
+import { updateUser } from "../services/modules/userService";
 import toast from "react-hot-toast";
 
 const Popup = ({ onClose }) => {
@@ -54,8 +54,11 @@ const Popup = ({ onClose }) => {
       },
       { success: { duration: 3500 }, error: { duration: 2000 } }
     );
-    if (response.status === 200) onClose();
-    else setError("Failed to update user Information. Try again later.");
+    if (response.message.includes("success")) {
+      onClose();
+    } else {
+      setError(response.message);
+    }
 
   };
 
