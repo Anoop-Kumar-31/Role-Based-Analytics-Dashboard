@@ -4,7 +4,7 @@ const Loading = () => {
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white">
       {/* Background soft glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[var(--primary-accent)]/5 rounded-full blur-[80px]"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[var(--primary-accent)]/5 rounded-full blur-[50px]"></div>
 
       <div className="relative flex flex-col items-center animate-fadeIn">
         {/* Logo with pulse */}
@@ -20,7 +20,7 @@ const Loading = () => {
         {/* Brand Text */}
         <div className="mb-6 flex flex-col items-center text-center">
           <h1 className="text-xl font-bold bg-gradient-to-r from-[var(--primary-accent)] to-[var(--secondary-accent)] bg-clip-text text-transparent">
-            Role Based Access Control Analytics
+            Role Based Access Control Dashboard
           </h1>
           <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--text-tertiary)] font-semibold mt-1">
             Financial Analytics
@@ -35,9 +35,9 @@ const Loading = () => {
           <div
             className="absolute top-0 left-0 h-full bg-gradient-to-r from-[var(--primary-accent)] to-[var(--secondary-accent)] rounded-full animate-shimmer"
             style={{
-              width: "60%",
+              width: "0%",
               backgroundSize: "200% 100%",
-              animation: "shimmer 1.5s linear infinite"
+              animation: "shimmer 1.5s linear infinite, loading-bar-fill 3s forwards ease-in-out"
             }}
           ></div>
         </div>
@@ -56,6 +56,10 @@ const Loading = () => {
         <span className="w-1 h-1 bg-[var(--border)] rounded-full"></span>
         <span>Growth</span>
       </div>
+      {/* tell we have used lazy load to show the loading screen */}
+      <p className="absolute bottom-2 left-1/2 -translate-x-1/2 mt-4 text-[11px] text-[var(--text-secondary)] animate-pulse">
+        Intentional delay for demo purpose
+      </p>
     </div>
   );
 };

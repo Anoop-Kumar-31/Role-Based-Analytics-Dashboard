@@ -3,7 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Loading from './components/Loading.jsx';
 
-const App = lazy(() => import("./App"));
+const App = lazy(() =>
+  Promise.all([
+    import("./App"),
+    new Promise(resolve => setTimeout(resolve, 2500))
+  ]).then(([moduleExports]) => moduleExports)
+);
 
 import { Provider } from "react-redux";
 import { store, persistor } from "./store/index.js"; // updated import

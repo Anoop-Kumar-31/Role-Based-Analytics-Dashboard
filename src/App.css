@@ -75,6 +75,11 @@ html, body, #root {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+@keyframes loading-bar-fill {
+  0% { width: 0%; }
+  50% { width: 80%; }
+  100% { width: 100%; }
+}
 
 .animate-fadeIn   { animation: fadeIn 0.3s ease-out both; }
 .animate-slideDown{ animation: slideDown 0.2s ease-out both; }
