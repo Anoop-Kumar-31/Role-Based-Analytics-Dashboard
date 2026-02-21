@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { updateUser } from "../services/endpoints";
+import toast from "react-hot-toast";
 
-const Popup = ({ onClose, onSubmit }) => {
+const Popup = ({ onClose }) => {
+  const { user } = useAuth();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,11 +21,19 @@ const Popup = ({ onClose, onSubmit }) => {
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     if (!oldPassword || !newPassword || !confirmPassword) {
       setError("All fields are required.");
+      return;
+    }
+    if (oldPassword === newPassword) {
+      setError("Old password and new password cannot be the same.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setError("New password and confirm password do not match.");
       return;
     }
     if (!validatePassword(newPassword)) {
@@ -30,16 +42,19 @@ const Popup = ({ onClose, onSubmit }) => {
       );
       return;
     }
-    if (newPassword !== confirmPassword) {
-      setError("New password and confirm password do not match.");
-      return;
-    }
-    // Simulate submit
-    if (onSubmit) {
-      onSubmit({ oldPassword, newPassword });
-    }
-    alert("Password updated!");
-    if (onClose) onClose();
+
+    const response = await toast.promise(
+      updateUser(user?.user_id),
+      {
+        loading: 'Updating user Information...',
+        success: 'User Information updated successfully!',
+        error: 'Failed to update user Information.',
+      },
+      { success: { duration: 3500 }, error: { duration: 2000 } }
+    );
+    if (response.status === 200) onClose();
+    else setError("Failed to update user Information. Try again later.");
+
   };
 
   return (
