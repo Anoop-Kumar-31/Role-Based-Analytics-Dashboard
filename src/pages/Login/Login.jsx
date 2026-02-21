@@ -23,22 +23,26 @@ const Login = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async () => {
+  const handleLogin = async (directEmail, directPassword) => {
+    const loginEmail = directEmail || email;
+    const loginPassword = directPassword || password;
+
+    if (!loginEmail || !loginPassword) {
+      setError("Please enter both email and password.");
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {
-      const res = await signin({ email, password });
-      // console.log(res);
-      // Get token from res.data.accessToken
+      const res = await signin({ email: loginEmail, password: loginPassword });
       const { accessToken, user } = res?.data;
-      // console.log(user)
 
       if (!accessToken || !user) {
         throw new Error("No response data from Server.");
       }
-      // console.log(user, accessToken);
-      dispatch(setCredentials({ user, token: accessToken }));
 
+      dispatch(setCredentials({ user, token: accessToken }));
       localStorage.setItem("activePage", "Dashboard");
       onClose(true); // Go to dashboard
     } catch (err) {
@@ -108,19 +112,19 @@ const Login = ({ onClose }) => {
         </button> */}
 
         {/* Logo */}
-        <div className="mb-6 text-start flex justify-center">
+        <div className="mb-4 text-start flex justify-center">
           <img
             src="/LOGOnew.png"
             alt="App Logo"
-            className="h-20 object-contain"
+            className="h-16 object-contain"
           />
         </div>
 
-        <h2 className="text-2xl font-bold mb-5 text-[var(--text-primary)]">Log in</h2>
+        <h2 className="text-xl font-bold mb-4 text-[var(--text-primary)]">Log in</h2>
 
         {/* Error message */}
         {error && (
-          <div className="mb-4 text-red-600 text-sm text-center bg-red-50 py-2 px-3 rounded-xl">{error}</div>
+          <div className="mb-3 text-red-600 text-[10px] text-center bg-red-50 py-1.5 px-3 rounded-xl border border-red-100">{error}</div>
         )}
 
         {/* email */}
@@ -168,20 +172,61 @@ const Login = ({ onClose }) => {
           Or click the ✕ button above to continue in demo mode
         </p> */}
 
-        <div className="text-center">
+        <div className="flex items-center justify-center gap-4">
           <p
             onClick={() => setShowForgotModal(true)}
-            className="text-sm text-[var(--primary-accent)] font-medium cursor-pointer hover:text-[var(--primary-accent-hover)] transition-colors"
+            className="text-xs text-[var(--primary-accent)] font-medium cursor-pointer hover:text-[var(--primary-accent-hover)] transition-colors"
           >
             Forgot Password?
           </p>
-
+          <span className="text-[var(--border)]">|</span>
           <p
-            className="mt-2 text-sm text-[var(--secondary-accent)] font-medium cursor-pointer hover:text-sky-600 transition-colors"
+            className="text-xs text-[var(--secondary-accent)] font-medium cursor-pointer hover:text-sky-600 transition-colors"
             onClick={() => setShowQuestionnaire(true)}
           >
-            Onboarding Questionnaire →
+            Onboarding →
           </p>
+        </div>
+
+        {/* --- Quick Demo Access Section --- */}
+        <div className="mt-5 pt-3 border-t border-dashed border-[var(--border)]">
+          <p className="text-xs font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-4 text-center">
+            Quick Demo Access
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              // {
+              //   role: "Super Admin",
+              //   email: "demo_super@dashboard.com",
+              //   desc: "Full control & Onboarding"
+              // },
+              {
+                role: "Company Admin",
+                email: "demo_admin@dashboard.com",
+                desc: "Dashboard & Financials"
+              },
+              {
+                role: "Employee",
+                email: "demo_employee@dashboard.com",
+                desc: "Operational Logs"
+              }
+            ].map((account) => (
+              <button
+                key={account.role}
+                onClick={() => {
+                  const demoEmail = account.email;
+                  const demoPassword = "password123";
+                  setEmail(demoEmail);
+                  setPassword(demoPassword);
+                  handleLogin(demoEmail, demoPassword);
+                }}
+                className="group flex flex-col items-center justify-center px-2 py-2 bg-slate-50 border border-slate-200 rounded-xl hover:border-[var(--primary-accent)] hover:bg-blue-50 transition-all duration-200 text-center"
+              >
+                <p className="text-[10px] font-bold text-slate-700 group-hover:text-[var(--primary-accent)]">{account.role}</p>
+                <p className="text-[8px] text-slate-400 group-hover:text-slate-500">{account.desc}</p>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

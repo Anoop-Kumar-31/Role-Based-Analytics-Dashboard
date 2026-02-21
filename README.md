@@ -10,6 +10,16 @@
 [![GitHub](https://img.shields.io/badge/GitHub-Ready-2496ED?logo=github&logoColor=white&style=for-the-badge)](https://github.com/Anoop-Kumar-31/Role-Based-Analytics-Dashboard)
 ---
 
+## 🚀 Live Demo
+
+Experience the dashboard instantly without manual configuration:
+- **URL**: [Live Application Link](https://role-based-analytics-dashboard.vercel.app/) 
+- **Demo Accounts**:
+    - **Company Admin**: `demo_admin@dashboard.com` | `password123`
+    - **Employee**: `demo_employee@dashboard.com` | `password123`
+
+---
+
 ## 📖 Overview
 
 The **Restaurant Operations Dashboard** is a sophisticated multi-tenant SaaS application designed to empower restaurant groups with data-driven insights. It bridges the gap between daily operations and high-level financial oversight, providing a unified platform for employees, managers, and executives.
