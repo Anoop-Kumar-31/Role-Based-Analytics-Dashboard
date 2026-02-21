@@ -161,7 +161,7 @@ const Login = ({ onClose }) => {
         </div>
 
         <button
-          onClick={handleLogin}
+          onClick={() => handleLogin()}
           disabled={loading}
           className="w-full bg-[var(--primary-accent)] hover:bg-[var(--primary-accent-hover)] text-white font-semibold py-3 rounded-xl mb-2 disabled:opacity-60 transition-all duration-200 text-sm shadow-sm hover:shadow-md"
         >
