@@ -65,7 +65,7 @@ const UserInfoForm = ({ form, setForm }) => {
 
 const PopUp = ({ onClose, data }) => {
 
-  console.log(data)
+  // console.log(data)
 
   const [form, setForm] = useState({
     newPassword: "",
@@ -94,7 +94,7 @@ const PopUp = ({ onClose, data }) => {
         try {
           const response = await updateUser(data.user_id, { password: newPassword })
           if (response) {
-            console.log(response);
+            // console.log(response);
           }
         } catch (error) {
           console.error(error);

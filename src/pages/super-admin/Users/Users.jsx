@@ -61,7 +61,7 @@ const Users = () => {
           },
           { success: { duration: 2000 }, error: { duration: 2000 } }
         );
-        console.log(response)
+        // console.log(response)
         if (response && response.data) {
           const mappedUsers = response.data.users.map(
             ({

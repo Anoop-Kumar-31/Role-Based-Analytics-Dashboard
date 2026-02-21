@@ -12,7 +12,7 @@ const DropdownMenu = ({ setActivePage, closeDropdown, setPopup, setIsLoggedIn })
   const dispatch = useDispatch();
 
   const handleLogOut = () => {
-    console.log("Logging out...");
+    // console.log("Logging out...");
 
     localStorage.removeItem("x-access-token"); // ✅ correct key
     dispatch(logout());

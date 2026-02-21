@@ -11,7 +11,7 @@ import { updateUserInfo } from "../../../store/slices/authSlice";
 const Profile = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
-  console.log(user)
+  // console.log(user)
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     first_name: user?.first_name,
@@ -42,7 +42,7 @@ const Profile = () => {
   };
 
   const saveChanges = async () => {
-    console.log(user)
+    // console.log(user)
     try {
       if (!user.user_id) {
         toast.error("User not found");
@@ -69,15 +69,15 @@ const Profile = () => {
           user_profile_image: formData.user_profile_image,
         };
       }
-      console.log("Payload to update user:", formData);
+      // console.log("Payload to update user:", formData);
       const response = isFormData
         ? await updateUser(user.user_id, payload, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         : await updateUser(user.user_id, payload);
 
-      console.log(formData.email, user.email)
-      console.log(response)
+      // console.log(formData.email, user.email)
+      // console.log(response)
       dispatch(
         updateUserInfo({
           first_name: response.user.first_name,

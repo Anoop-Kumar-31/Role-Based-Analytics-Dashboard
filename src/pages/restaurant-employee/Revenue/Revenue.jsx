@@ -72,7 +72,7 @@ const Revenue = () => {
       setApiError(false); // Clear previous errors
 
       try {
-        console.log(userData.user_id)
+        // console.log(userData.user_id)
         const response = await toast.promise(
           getAllRevenues([], userData.user_id),
           {
@@ -86,7 +86,7 @@ const Revenue = () => {
         if (!response || !response.data) {
           throw new Error("Invalid response data.");
         }
-        console.log(response.data)
+        // console.log(response.data)
 
         setRawRevenueData(response.data); // Store raw data
 

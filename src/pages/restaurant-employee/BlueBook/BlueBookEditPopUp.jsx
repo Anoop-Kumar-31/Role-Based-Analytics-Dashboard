@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { updateBlueBook } from "../../../services/modules/blueBookService";
 
 const BlueBookEditPopUp = ({ onClose, data, companyId, allRestaurants }) => {
-    console.log("Data:", data);
+    // console.log("Data:", data);
     const handleSubmit = async (formData, notesData) => {
         // Construct payload for update
         // similar format to create, but we might just need to send what changed or everything

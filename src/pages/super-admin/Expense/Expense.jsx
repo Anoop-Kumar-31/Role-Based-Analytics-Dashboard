@@ -59,7 +59,7 @@ const Expense = () => {
           { success: { duration: 3500 }, error: { duration: 2000 } }
         );
 
-        console.log(response)
+        // console.log(response)
         if (!response || !response.data) throw new Error('Invalid response');
 
         setAllExpenses(response.data.expenses);

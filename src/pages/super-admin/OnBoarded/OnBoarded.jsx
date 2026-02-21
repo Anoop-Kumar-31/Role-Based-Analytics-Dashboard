@@ -33,7 +33,7 @@ const OnBoarded = () => {
     setLoading(true);
     try {
       const { data } = await getAllOnboardedCompanies();
-      console.log(data)
+      // console.log(data)
       setCompanies(data || []);
     } catch {
       toast.error("Failed to load companies");

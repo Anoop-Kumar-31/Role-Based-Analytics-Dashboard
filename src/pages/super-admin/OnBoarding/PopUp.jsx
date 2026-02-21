@@ -134,7 +134,7 @@ const PopUp = ({ onClose, data }) => {
   ];
 
   const handleSubmit = (props) => {
-    console.log(props);
+    // console.log(props);
     // Call API to save data
     // Refresh the page
   }

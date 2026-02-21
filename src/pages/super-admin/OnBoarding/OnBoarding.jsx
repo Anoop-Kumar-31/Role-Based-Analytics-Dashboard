@@ -32,10 +32,10 @@ const PendingOnboarding = () => {
   const fetchCompanies = useCallback(async () => {
     setLoading(true);
     try {
-      console.log("Fetching pending companies...");
+      // console.log("Fetching pending companies...");
       const { data } = await getAllPendingCompanies();
       setCompanies(data || []);
-      console.log(data)
+      // console.log(data)
     } catch (err) {
       toast.error("Failed to load pending companies");
       console.error("Error fetching pending:", err);

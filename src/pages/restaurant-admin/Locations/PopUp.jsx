@@ -76,7 +76,7 @@ const PopUp = ({ onClose, selectedRestaurant }) => {
           .filter(([key]) => !ignoredKeys.includes(key))
           .some(([, val]) => hasValue(val));
 
-        console.log(laborTarget)
+        // console.log(laborTarget)
         // New   — includes_salaries flag
         const has_included_salaries =
           (laborTarget.foh_combined_salaried !== null &&

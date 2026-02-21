@@ -13,7 +13,7 @@ const RevenuePopUp = ({ onClose, data, formType = "create" }) => {
   const [allRestaurants, setAllRestaurants] = useState();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  console.log(data)
+  // console.log(data)
   const [formData, setFormData] = useState(data);
 
   const userData = useSelector((state) => state.auth.user);
@@ -22,7 +22,7 @@ const RevenuePopUp = ({ onClose, data, formType = "create" }) => {
     const fetchRestaurants = async () => {
       try {
         const response = await getRestaurantsByCompanyId(userData.company_id); // Adjust based on your API return format
-        console.log(response)
+        // console.log(response)
         setAllRestaurants(response);
         if (response && Array.isArray(response.data)) {
           const restaurantNames = response.data.map((r) => r.restaurant_name);
@@ -126,11 +126,11 @@ const RevenuePopUp = ({ onClose, data, formType = "create" }) => {
 
         // Prepare payload including restaurant_id from the selected restaurant
         const { restaurant_name, user_email, ...payload } = formData
-        console.log(payload);
+        // console.log(payload);
         // Call createRevenue API with this payload
         const response = await createRevenue(selectedRestaurant.restaurant_id, { ...payload, user_id: userData.user_id });
 
-        console.log(response)
+        // console.log(response)
         if (response && response.data) {
           toast.success("Revenue report submitted successfully!");
           onClose(true, payload);
@@ -153,8 +153,8 @@ const RevenuePopUp = ({ onClose, data, formType = "create" }) => {
         }
 
         const { restaurant_name, user_email, ...payload } = formData;
-        console.log(payload);
-        console.log(data)
+        // console.log(payload);
+        // console.log(data)
         const response = await updateRevenue(data.revenue_id, payload);
 
         // console.log(response)

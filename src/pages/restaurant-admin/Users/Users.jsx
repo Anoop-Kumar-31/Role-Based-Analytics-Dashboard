@@ -62,7 +62,7 @@ const Users = () => {
           },
           { success: { duration: 2000 }, error: { duration: 2000 } }
         );
-        console.log(response)
+        // console.log(response)
         if (response && response.data) {
           const mappedUsers = response.data?.users?.map(
             ({
@@ -166,9 +166,9 @@ const Users = () => {
     setApiError(false);
     try {
       const response = await getAllUsers(company_id);
-      console.log(response)
+      // console.log(response)
       if (response && response.data) {
-        console.log(response.data?.users)
+        // console.log(response.data?.users)
         const mappedUsers = response.data?.users?.map(
           ({
             user_id,

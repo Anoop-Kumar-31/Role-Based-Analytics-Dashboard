@@ -22,9 +22,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async (start = "", end = "") => {
       try {
-        console.log("fetching the stats")
+        // console.log("fetching the stats")
         const response = await getDashboardStats(start, end);
-        console.log(response)
+        // console.log(response)
         if (response) {
           setDashboardStats(response);
         }
@@ -36,7 +36,7 @@ const Dashboard = () => {
     const fetchRestaurants = async () => {
       try {
         const response = await getRestaurantsByCompanyId(); // Adjust based on your API return format
-        console.log(response)
+        // console.log(response)
         setAllRestaurants(response);
         if (response && Array.isArray(response.data)) {
           const restaurantNames = response.data.map((r) => r.restaurant_name);
@@ -59,7 +59,7 @@ const Dashboard = () => {
   // Validate dates
   const validateDates = useCallback((from, to) => {
     setError("");
-    console.log("Validating dates:", from, to);
+    // console.log("Validating dates:", from, to);
     if (from && to && from > to) {
       setError("From date cannot be greater than To date.");
       setTimeout(() => setError(""), 3000);
@@ -87,7 +87,7 @@ const Dashboard = () => {
   const onSubmit = useCallback((e) => {
     e.preventDefault();
     // Replace with actual backend call
-    console.log("Selected Restaurants:", selected);
+    // console.log("Selected Restaurants:", selected);
   }, [selected]);
 
   // Apply filter based on selected dates
@@ -96,7 +96,7 @@ const Dashboard = () => {
     if (from && to) {
       if (validateDates(from, to)) {
         fetchStats(from, to);
-        console.log("Filter applied with dates:", from, to);
+        // console.log("Filter applied with dates:", from, to);
         setActive("prime");
       }
     } else {

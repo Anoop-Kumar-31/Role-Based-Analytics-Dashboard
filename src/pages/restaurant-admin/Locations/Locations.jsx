@@ -32,7 +32,7 @@ const Locations = () => {
     hasFetched.current = true;
 
     const fetchRestaurants = async () => {
-      console.log('user_id', user_id)
+      // console.log('user_id', user_id)
       try {
         const response = await toast.promise(
           getUserRestaurants(user_id),
@@ -43,7 +43,7 @@ const Locations = () => {
           },
           { success: { duration: 2000 }, error: { duration: 2000 } }
         );
-        console.log('response', response)
+        // console.log('response', response)
         if (response?.restaurants) {
           setAllResponse(response.restaurants);
           const mapped = response.restaurants.map(({ restaurant_name, restaurant_location, updatedAt }) => ({
@@ -65,10 +65,10 @@ const Locations = () => {
   const handleEdit = (e, index) => {
     e.stopPropagation();
     setEditIndex(index);
-    console.log("selected res:\n", allResponse[index])
+    // console.log("selected res:\n", allResponse[index])
     setSelectedRestaurant(allResponse[index])
     setPopup(true);
-    console.log("Edit index:", popUp);
+    // console.log("Edit index:", popUp);
   };
 
   // Handle popup close

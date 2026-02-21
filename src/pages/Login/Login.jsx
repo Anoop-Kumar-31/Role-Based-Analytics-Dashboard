@@ -36,7 +36,7 @@ const Login = ({ onClose }) => {
       if (!accessToken || !user) {
         throw new Error("No response data from Server.");
       }
-      console.log(user, accessToken);
+      // console.log(user, accessToken);
       dispatch(setCredentials({ user, token: accessToken }));
 
       localStorage.setItem("activePage", "Dashboard");

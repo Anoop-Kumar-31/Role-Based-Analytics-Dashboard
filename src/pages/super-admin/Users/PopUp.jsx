@@ -15,14 +15,14 @@ const UserInfoForm = ({ form, setForm, restaurantOptions, roleOptions, formType 
     if (formType == "edit") {
       const fetchUserDetailsAndRestaurants = async () => {
         try {
-          console.log(form.user_email)
+          // console.log(form.user_email)
           const userDetail = await getUserByEmail(form.user_email);
           if (userDetail) {
             // console.log(userDetail)
             const response = await getRestaurantsByCompanyId(userDetail.user.company_id);
             if (response) {
               setRestList(response.data.map((obj) => obj.restaurant_name));
-              console.log("all res \n", response);
+              // console.log("all res \n", response);
             }
           }
         } catch (error) {
@@ -179,7 +179,7 @@ const UserReviewForm = ({ form }) => (
 
 const PopUp = ({ onClose, data, formType = "edit" }) => {
   // Split fullName into user_first_name and user_last_name only once on mount
-  console.log(data)
+  // console.log(data)
   const initialForm = React.useMemo(() => {
     if (data && data.fullName) {
       const parts = data.fullName.trim().split(" ");
@@ -217,11 +217,11 @@ const PopUp = ({ onClose, data, formType = "edit" }) => {
         const roles = await getAllRoles();
         // setAllRoles(roles);
         // setAllRestaurants(response);
-        console.log(response)
+        // console.log(response)
 
         if (roles && Array.isArray(roles.data)) {
           const roleNames = roles?.data?.map((r) => r.role_name);
-          console.log(roleNames);
+          // console.log(roleNames);
           setRoleOptions(roleNames);
         } else {
           throw new Error("Invalid roles data format");
@@ -247,7 +247,7 @@ const PopUp = ({ onClose, data, formType = "edit" }) => {
   ];
 
   const handleSubmit = async (props) => {
-    console.log(props);
+    // console.log(props);
     const parts = props.fullName.trim().split(" ");
     const first_name = parts.shift();
     const last_name = parts.join(" "); // MAYBE THE LAST NAME HAVE MORE WORDS then 1
@@ -260,11 +260,11 @@ const PopUp = ({ onClose, data, formType = "edit" }) => {
       user_phone_no: props.user_phone_no,
       user_email: props.user_email
     }
-    console.log(req)
+    // console.log(req)
     if (formType == "create") {
       try {
         const response = await addUser(req);
-        console.log(response);
+        // console.log(response);
         toast.success("User added successfully");
       } catch (error) {
         console.error("❌ Failed to add user:", error);
@@ -273,7 +273,7 @@ const PopUp = ({ onClose, data, formType = "edit" }) => {
     } else {
       try {
         const response = await updateUser(form.user_id, req);
-        console.log(response);
+        // console.log(response);
         toast.success("User updated successfully");
       } catch (error) {
         console.error("❌ Failed to update user:", error);

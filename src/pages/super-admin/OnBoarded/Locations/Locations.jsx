@@ -17,7 +17,7 @@ const HeadingData = {
 };
 
 const Locations = ({ company_id }) => {
-  console.log(company_id);
+  // console.log(company_id);
   const [popUp, setPopup] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
   const [allResponse, setAllResponse] = useState({});
@@ -34,7 +34,7 @@ const Locations = ({ company_id }) => {
 
     const fetchRestaurants = async () => {
       try {
-        console.log('get restaurants locations for company:', company_id)
+        // console.log('get restaurants locations for company:', company_id)
         const response = await toast.promise(
           getRestaurantsByCompanyId(company_id),
           {
@@ -44,16 +44,16 @@ const Locations = ({ company_id }) => {
           },
           { success: { duration: 2000 }, error: { duration: 2000 } }
         );
-        console.log('get restaurants locations', response)
+        // console.log('get restaurants locations', response)
         if (response?.data) {
-          console.log('get restaurants locations', response.data)
+          // console.log('get restaurants locations', response.data)
           setAllResponse(response.data);
           const mapped = response.data.map(({ restaurant_name, restaurant_location, updated_at }) => ({
             name: restaurant_name,
             address: restaurant_location,
             updateOn: updated_at ? new Date(updated_at).toLocaleDateString() : "N/A",
           }));
-          console.log('mapped', mapped)
+          // console.log('mapped', mapped)
           setRestaurants(mapped);
         }
       } catch (error) {
@@ -67,10 +67,10 @@ const Locations = ({ company_id }) => {
   // Handle edit
   const handleEdit = (e, index) => {
     e.stopPropagation();
-    console.log("selected res:\n", allResponse[index])
+    // console.log("selected res:\n", allResponse[index])
     setSelectedRestaurant(allResponse[index])
     setPopup(true);
-    console.log("Edit index:", popUp);
+    // console.log("Edit index:", popUp);
   };
 
   // Handle popup close

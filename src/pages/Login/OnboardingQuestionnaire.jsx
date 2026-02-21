@@ -95,14 +95,14 @@ const OnboardingQuestionnaire = ({ onClose }) => {
     };
 
     try {
-      console.log(payload)
+      // console.log(payload)
       const res = await toast.promise(
         onboarding(payload),
         {
           loading: "Onboarding in progress...",
           success: (res) => {
             // you can inspect response here and decide message
-            console.log("Success response:", res);
+            // console.log("Success response:", res);
             return "Onboarding successful!";
           },
           error: (err) => {

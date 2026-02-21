@@ -85,7 +85,7 @@ const Revenue = () => {
         if (!response || !response.data) {
           throw new Error("Invalid response data.");
         }
-        console.log(response.data)
+        // console.log(response.data)
 
         setRawRevenueData(response.data); // Store raw data
 

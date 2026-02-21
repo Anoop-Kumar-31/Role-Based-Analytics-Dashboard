@@ -38,7 +38,7 @@ const Expense = () => {
   const [shouldRefetch, setShouldRefetch] = useState(0);
   const [allExpenses, setAllExpenses] = useState([]); // Store all expenses fetched from API
   const user = useSelector((state) => state.auth.user);
-  console.log(user)
+  // console.log(user)
 
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const Expense = () => {
           { success: { duration: 3500 }, error: { duration: 2000 } }
         );
 
-        console.log(response)
+        // console.log(response)
         if (!response || !response.data) throw new Error('Invalid response');
 
         setAllExpenses(response.data.expenses);
@@ -174,7 +174,7 @@ const Expense = () => {
     setEditIndex(index);
     setSelectedExpense(allExpenses[index]);
     setPopup(true);
-    console.log(allExpenses[index]);
+    // console.log(allExpenses[index]);
   }, [expenseList]);
 
   // Handle popup close and submit

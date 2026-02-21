@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 // ];
 
 const PopUp = ({ onClose, selectedRestaurant }) => {
-  console.log('selectedRestaurant', selectedRestaurant)
+  // console.log('selectedRestaurant', selectedRestaurant)
   const [formData, setFormData] = useState({
     restaurant_name: '',
     restaurant_location: '',
@@ -35,7 +35,7 @@ const PopUp = ({ onClose, selectedRestaurant }) => {
         if (!selectedRestaurant?.restaurant_id) return;
 
         const restaurantData = await getRestaurantById(selectedRestaurant.restaurant_id);
-        console.log('restaurantData', restaurantData)
+        // console.log('restaurantData', restaurantData)
 
         const monthNames = [
           'january', 'february', 'march', 'april', 'may', 'june',
@@ -78,7 +78,7 @@ const PopUp = ({ onClose, selectedRestaurant }) => {
           .filter(([key]) => !ignoredKeys.includes(key))
           .some(([, val]) => hasValue(val));
 
-        console.log(laborTarget)
+        // console.log(laborTarget)
         // New   — includes_salaries flag
         const has_included_salaries =
           (laborTarget.foh_combined_salaried !== null &&

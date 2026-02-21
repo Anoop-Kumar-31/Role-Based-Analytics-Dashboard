@@ -53,7 +53,7 @@ const addFormData = (data, formData, setFormData, setAmounts) => {
 };
 
 const ReportExpenseForm = ({ onClose, data = {}, type = "create" }) => {
-  console.log("data: ", data)
+  // console.log("data: ", data)
   const userData = useSelector((state) => state.auth.user);
   const [formData, setFormData] = useState({
     submission_date: data.createdAt ? data.createdAt.split("T")[0] : new Date().toISOString().split("T")[0],

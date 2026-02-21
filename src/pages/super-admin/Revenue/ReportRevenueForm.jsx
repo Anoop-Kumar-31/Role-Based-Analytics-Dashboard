@@ -73,7 +73,7 @@ const RevenuePopUp = ({ onClose, data, formType = "create" }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formData)
+    // console.log(formData)
 
     // Basic required fields validation
     if (
@@ -127,11 +127,11 @@ const RevenuePopUp = ({ onClose, data, formType = "create" }) => {
 
         // Prepare payload including restaurant_id from the selected restaurant
         const { restaurant_name, user_email, ...payload } = formData
-        console.log(payload);
+        // console.log(payload);
         // Call createRevenue API with this payload
         const response = await createRevenue(selectedRestaurant.restaurant_id, { ...payload, user_id: user.user_id });
 
-        console.log(response)
+        // console.log(response)
         if (response && response.data) {
           toast.success("Revenue report submitted successfully!");
           onClose(true, payload);
@@ -154,11 +154,11 @@ const RevenuePopUp = ({ onClose, data, formType = "create" }) => {
         }
 
         const { restaurant_name, user_email, ...payload } = formData;
-        console.log(payload);
-        console.log(data)
+        // console.log(payload);
+        // console.log(data)
         const response = await updateRevenue(data.revenue_id, payload);
 
-        console.log(response)
+        // console.log(response)
         if (response && response.data) {
           toast.success("Revenue updated successfully!");
           onClose(true, payload);
