@@ -3,11 +3,15 @@
 > **Enterprise-Grade Multi-Tenant RBAC SaaS** - A comprehensive platform for streamlined restaurant operations, financial tracking, and role-based analytics.
 
 [![React](https://img.shields.io/badge/React-19.1.0-61DAFB?logo=react&logoColor=white&style=for-the-badge)](https://react.dev/)
+[![React Router](https://img.shields.io/badge/React_Router-7.6.2-CA4245?logo=react-router&logoColor=white&style=for-the-badge)](https://reactrouter.com/)
 [![Vite](https://img.shields.io/badge/Vite-6.3.5-646CFF?logo=vite&logoColor=white&style=for-the-badge)](https://vitejs.dev/)
 [![Redux](https://img.shields.io/badge/Redux_Toolkit-2.8.2-764ABC?logo=redux&logoColor=white&style=for-the-badge)](https://redux-toolkit.js.org/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.1.8-38B2AC?logo=tailwind-css&logoColor=white&style=for-the-badge)](https://tailwindcss.com/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white&style=for-the-badge)](https://www.docker.com/)
+[![Axios](https://img.shields.io/badge/Axios-1.11.0-5A29E4?logo=axios&logoColor=white&style=for-the-badge)](https://axios-http.com/)
+[![Recharts](https://img.shields.io/badge/Recharts-3.7.0-22B5BF?logo=REACT&logoColor=white&style=for-the-badge)](https://recharts.org/)
+[![JWT](https://img.shields.io/badge/JWT-Authentication-ffff00?logo=JSON%20web%20tokens&logoColor=white&style=for-the-badge)](https://jwt.io/)
 [![GitHub](https://img.shields.io/badge/GitHub-Ready-2496ED?logo=github&logoColor=white&style=for-the-badge)](https://github.com/Anoop-Kumar-31/Role-Based-Analytics-Dashboard)
+[![VERCEL](https://img.shields.io/badge/VERCEL-Deployed-2496ED?logo=vercel&logoColor=white&style=for-the-badge)](https://role-based-analytics-dashboard.vercel.app/)
 ---
 
 ## 🚀 Live Demo
@@ -78,10 +82,11 @@ The application features three specialized portals, each tailored to specific op
 
 | Layer | Technologies |
 | :--- | :--- |
-| **Frontend Core** | React 19.1.0, Vite 6.3.5 |
+| **Frontend Core** | React 19.1.0, React Router 7.6.2, Vite 6.3.5 |
 | **State Management** | Redux Toolkit, Redux Persist |
 | **Styling** | TailwindCSS 4.1.8, Lucide React, React Icons |
 | **Networking** | Axios (with Interceptors), JWT-Based Auth |
+| **Data Visualization** | Recharts 3.7.0 |
 | **Infrastructure** | Docker, Docker Compose (Optional)|
 
 ---
