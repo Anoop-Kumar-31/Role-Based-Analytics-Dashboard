@@ -27,7 +27,7 @@ const DropdownMenu = ({ setActivePage, closeDropdown, setPopup, setIsLoggedIn })
     <div
       className="
         absolute top-full right-0 mt-2 bg-white text-[var(--text-primary)]
-        shadow-elevated rounded-xl w-full z-10 overflow-hidden animate-slideDown
+        shadow-elevated rounded-xl min-w-[200px] w-full z-10 overflow-hidden animate-slideDown
         border border-[var(--border)]
       "
     >

@@ -3,8 +3,11 @@ import { X } from "lucide-react";
 import { useSelector } from "react-redux";
 import { updateUser } from "../services/modules/userService";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/slices/authSlice";
 
 const Popup = ({ onClose }) => {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -56,6 +59,7 @@ const Popup = ({ onClose }) => {
     );
     if (response.message.includes("success")) {
       onClose();
+      dispatch(logout());
     } else {
       setError(response.message);
     }
@@ -63,9 +67,9 @@ const Popup = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 h-full bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="fixed inset-0 h-full bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 w-full">
       <form
-        className="bg-white rounded-2xl shadow-elevated w-[clamp(100px,38%,600px)] flex flex-col gap-5 relative justify-center items-center overflow-hidden animate-slideUp"
+        className="bg-white rounded-2xl shadow-elevated md:w-[clamp(400px,40%,600px)] w-full mx-4 flex flex-col gap-5 relative justify-center items-center overflow-hidden animate-slideUp"
         onSubmit={handleSubmit}
       >
         <div className="h-1 w-full bg-gradient-to-r from-[var(--primary-accent)] to-[var(--secondary-accent)]" />

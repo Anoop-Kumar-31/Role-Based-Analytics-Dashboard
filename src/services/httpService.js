@@ -2,7 +2,7 @@
 
 import apiClient from "./apiClient";
 
-const handleResponse = (response) =>response.data;
+const handleResponse = (response) => response.data;
 
 const handleError = (error) => {
   console.error("[API ERROR]", error);
